@@ -1,31 +1,29 @@
-import MySQLdb
-import flask
 from flask import Flask, render_template, request, redirect
 import mysql.connector
-from flask_mysqldb import MySQL
-from datetime import datetime
 from flask import url_for
-from Question_reference import SlideWindow
-
+import sys
 
 app = Flask(__name__)
-mysql = MySQL(app)
 
 myDb = mysql.connector.connect(
     host="localhost",
     user="root",
-    password="Brokenvessels27",
+    password="",
     port="3306",
-    database="b'its'"
+    database="ITS"
 )
 
 cursor = myDb.cursor()
-
+if (myDb.is_connected()):
+    print("Connected")
+else:
+    print("Not connected")
 
 @app.route('/choose_questions', methods=['GET', 'POST'])
 def choose_questions():
     try:
         if request.method == 'POST':
+            print(request.form)
             # fetch form data
             if request.form['submit_button'] == '1':
                 query = "select question from questions where status = 'publish'  and category = 'Chapter1' ORDER by RAND() LIMIT 1"
@@ -65,21 +63,20 @@ def choose_questions():
                 return redirect(url_for('display_questions', query=query))
             
             
-    except MySQLdb.Error as error:
+    except mysql.connector.Error as error:
             return "Failed to create due to this error: " + repr(error)
 
     return render_template('choose_questions.html')
 
 
-@app.route('/display_questions', methods=['GET', 'POST'])
+@app.route('/display_questions/<query>', methods=['GET', 'POST'])
 def display_questions(query):
+    print('display', file=sys.stderr)
     try:
         cursor.execute(query)
-        res1 = cursor.fetchall()
-        if res1 > 0:
-            res = cursor.fetchall()
-        else:
-            res = []
+        res = cursor.fetchall()
+
+
         if request.method == 'POST':
             # fetch form data
             if request.form['submit_button'] == 'Back':
@@ -87,7 +84,7 @@ def display_questions(query):
                 return redirect(url_for('choose_questions'))
 
             cursor.close()
-    except MySQLdb.Error as error:
+    except mysql.connector.Error as error:
         return "Failed to create due to this error: " + repr(error)
 
     return render_template('display_questions.html', res=res)
