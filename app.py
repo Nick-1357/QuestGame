@@ -1,4 +1,4 @@
-from flask import Flask, request, abort
+from flask import Flask
 
 app = Flask(__name__)
 import question_extraction
