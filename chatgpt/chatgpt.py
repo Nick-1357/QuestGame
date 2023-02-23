@@ -10,7 +10,7 @@ def login():
     })
     return chatbot
 
-# define your APIs here
+
 @app.route('/', methods=['GET'])
 def hello_world():
     return 'Hello, World!'

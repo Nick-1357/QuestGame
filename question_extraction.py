@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect
+import json
+from flask import Flask, render_template, request, redirect, url_for, session
 from app import app
 import mysql.connector
 from flask import url_for
@@ -19,14 +20,15 @@ if (myDb.is_connected()):
 else:
     print("Not connected")
 
-
+@app.route('/', methods = ['GET', 'POST'])
 @app.route('/choose_questions', methods=['GET', 'POST'])
 def choose_questions():
     try:
         if request.method == 'POST':
             # fetch form data
             query = f"select question from questions where status = 'publish'  and category = 'Chapter{request.form['submit_button']}' ORDER by RAND() LIMIT 1"
-            return redirect(url_for('display_questions', query=query))
+            session["query"] = query
+            return redirect(url_for('display_questions'))
 
     except mysql.connector.Error as error:
         return "Failed to create due to this error: " + repr(error)
@@ -34,9 +36,9 @@ def choose_questions():
     return render_template('choose_questions.html')
 
 
-@app.route('/display_questions/<query>', methods=['GET', 'POST'])
-def display_questions(query):
-    print('display', file=sys.stderr)
+@app.route('/display_questions', methods=['GET', 'POST'])
+def display_questions():
+    query = session["query"]
     try:
         cursor.execute(query)
         res = cursor.fetchall()
