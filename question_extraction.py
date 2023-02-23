@@ -4,6 +4,7 @@ from app import app
 import mysql.connector
 from flask import url_for
 import sys
+from chatgpt import chatgpt
 
 
 myDb = mysql.connector.connect(
@@ -20,7 +21,8 @@ if (myDb.is_connected()):
 else:
     print("Not connected")
 
-@app.route('/', methods = ['GET', 'POST'])
+
+@app.route('/', methods=['GET', 'POST'])
 @app.route('/choose_questions', methods=['GET', 'POST'])
 def choose_questions():
     try:
@@ -45,7 +47,10 @@ def display_questions():
 
         if request.method == 'POST':
             # fetch form data
-            if request.form['submit_button'] == 'Back':
+            if request.form['submit_button'] == 'hint':
+                # generate hint
+                hint = "placeholder"
+            elif request.form['submit_button'] == 'back':
                 # back to choosing topic page
                 return redirect(url_for('choose_questions'))
 
