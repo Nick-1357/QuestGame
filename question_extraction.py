@@ -29,7 +29,12 @@ def choose_questions():
         if request.method == 'POST':
             # fetch form data
             query = f"select question from questions where status = 'publish'  and category = 'Chapter{request.form['submit_button']}' ORDER by RAND() LIMIT 1"
-            session["query"] = query
+            try:
+                cursor.execute(query)
+                question = cursor.fetchall()
+            except mysql.connector.Error as error:
+                return "Failed to create due to this error: " + repr(error)
+            session["question"] = question
             return redirect(url_for('display_questions'))
 
     except mysql.connector.Error as error:
@@ -40,25 +45,19 @@ def choose_questions():
 
 @app.route('/display_questions', methods=['GET', 'POST'])
 def display_questions():
-    query = session["query"]
-    try:
-        cursor.execute(query)
-        res = cursor.fetchall()
+    question = session["question"]
+    hint = ""
 
-        if request.method == 'POST':
-            # fetch form data
-            if request.form['submit_button'] == 'hint':
-                # generate hint
-                hint = "placeholder"
-            elif request.form['submit_button'] == 'back':
-                # back to choosing topic page
-                return redirect(url_for('choose_questions'))
+    if request.method == 'POST':
+        # fetch form data
+        if request.form['submit_button'] == 'hint':
+            # generate hint
+            hint = "placeholder"
+        elif request.form['submit_button'] == 'back':
+            # back to choosing topic page
+            return redirect(url_for('choose_questions'))
 
-            cursor.close()
-    except mysql.connector.Error as error:
-        return "Failed to create due to this error: " + repr(error)
-
-    return render_template('display_questions.html', res=res)
+    return render_template('display_questions.html', question=question, hint=hint)
 
 
 if __name__ == '__main__':

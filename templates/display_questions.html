@@ -6,11 +6,9 @@
     </head>
     <body>
         <form method="POST" action="">
-            {% for user in res %}
             <tr>
-                <td>{{user[0] | safe}}</td>
+                <td>{{question[0] | safe}}</td>
             </tr>
-            {% endfor %}
             <br />
             {{hint}}
             <br />
