@@ -1,0 +1,2 @@
+Activate the virtual environment: 
+Use the appropriate command to activate the virtual environment based on your operating system. For example, on Windows you can use `.\venv\Scripts\activate` and on macOS or Linux you can use `source venv/bin/activate`.
