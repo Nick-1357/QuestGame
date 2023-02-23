@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, redirect
+import app
 import mysql.connector
 from flask import url_for
 import sys
 
-app = Flask(__name__)
 
 myDb = mysql.connector.connect(
     host="localhost",
