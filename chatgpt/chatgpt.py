@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from revChatGPT.V1 import Chatbot
-
-app = Flask(__name__)
+from app import app
 
 def login():
     chatbot = Chatbot(config={
@@ -10,10 +9,6 @@ def login():
     })
     return chatbot
 
-
-@app.route('/', methods=['GET'])
-def hello_world():
-    return 'Hello, World!'
 
 
 @app.route('/hint', methods=['GET'])
