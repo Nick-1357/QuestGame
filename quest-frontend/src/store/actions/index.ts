@@ -7,3 +7,32 @@ export const RIGHT = "RIGHT";
 export const LEFT = "LEFT";
 export const UP = "UP";
 export const DOWN = "DOWN";
+
+export const SET_INVALID_MOVEMENT = "SET_INVALID_MOVEMENT";
+export const RESET = "RESET";
+export const UPDATE_SCORE = "UPDATE_SCORE";
+
+export interface userCoord {
+    x: number,
+    y: number
+};
+
+export const makeMove = (newX: number, newY: number, movement: string) => ({
+    type: movement,
+    payload: [newX, newY]
+});
+
+export const setInvalDir = (direction: string) => ({
+    type: SET_INVALID_MOVEMENT,
+    payload: [direction]
+});
+
+export const resetGame = () => ({
+    type: RESET
+});
+
+export const updateScore = (type: string) => ({
+    type: UPDATE_SCORE,
+});
+
+
