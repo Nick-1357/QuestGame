@@ -1,8 +1,11 @@
+//Actions for sagas (dispatch())
 export const MOVE_RIGHT = "MOVE_RIGHT";
 export const MOVE_LEFT = "MOVE_LEFT";
 export const MOVE_UP = "MOVE_UP";
 export const MOVE_DOWN = "MOVE_DOWN";
 
+
+// Actions for reducers (Event Listener)
 export const RIGHT = "RIGHT";
 export const LEFT = "LEFT";
 export const UP = "UP";
@@ -12,7 +15,7 @@ export const SET_INVALID_MOVEMENT = "SET_INVALID_MOVEMENT";
 export const RESET = "RESET";
 export const UPDATE_SCORE = "UPDATE_SCORE";
 
-export interface userCoord {
+export interface IUserCoord {
     x: number,
     y: number
 };
@@ -24,7 +27,7 @@ export const makeMove = (newX: number, newY: number, movement: string) => ({
 
 export const setInvalDir = (direction: string) => ({
     type: SET_INVALID_MOVEMENT,
-    payload: [direction]
+    payload: direction
 });
 
 export const resetGame = () => ({
