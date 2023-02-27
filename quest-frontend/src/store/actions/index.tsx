@@ -20,6 +20,11 @@ export interface IUserCoord {
     y: number
 };
 
+export interface IDirCheck {
+    dir1: string,
+    dir2: string
+}
+
 export const makeMove = (newX: number, newY: number, movement: string) => ({
     type: movement,
     payload: [newX, newY]
