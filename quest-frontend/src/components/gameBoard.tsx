@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from "react";
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { IGlobalState } from "../store/reducers";
+
+import { makeMove, MOVE_LEFT, MOVE_DOWN, MOVE_RIGHT, MOVE_UP } from "../store/actions";
 
 export interface IGameBoard {
     height: number,
@@ -8,51 +10,59 @@ export interface IGameBoard {
 };
 
 const GameBoard = ({height, width}: IGameBoard) => {
-  const invalidDir = useSelector((state: IGlobalState) => state.invalidDir)
+  const invalidDirState = useSelector((state: IGlobalState) => state.invalidDir)
+  const invalidDir1 = invalidDirState[0].dir1;
+  const invalidDir2 = invalidDirState[0].dir2;
+
+  const dispatch = useDispatch();
 
 
   const moveUser = useCallback( 
-    // TODO
-    // IMPLEMENT USER MOVEMENT
-    // INCLUDE EDGE DETECTION
-    (dx = 0, dy = 0, ds: string) => {
-      if (dx > 0) {
-
+    // Might need checking
+    (dx = 0, dy = 0, invDir1: string, invDir2: string) => {
+      if (dx > 0 && invDir1 !== "RIGHT") { // X-axis bound checking
+        dispatch(makeMove(dx, dy, MOVE_RIGHT));
       }
 
+      if (dx < 0 && invDir1 !== "LEFT") {
+        dispatch(makeMove(dx, dy, MOVE_LEFT));
+      }
+
+      if (dy > 0 && invDir2 !== "DOWN") {
+        dispatch(makeMove(dx, dy, MOVE_DOWN));
+      }
+
+      if (dy < 0 && invDir2 !== "UP") {
+        dispatch(makeMove(dx, dy, MOVE_UP));
+      }
     },
-    []
+    [dispatch]
   );
 
   const handleKeyEvents = useCallback(
     (event: KeyboardEvent) => {
-      if (invalidDir) {
+      if (invalidDir1) { // invalidDir1 should be updated first and used as a condition check
         switch (event.key) {
-          case "w":
-            moveUser(0, 0, invalidDir);
+          case "w": //"w" and "d" are along Y-axis; dy > 0 == DOWN; dy < 0 == UP
+            moveUser(0, -20, invalidDir1, invalidDir2);
             break;
 
           case "s":
-            moveUser(0, 0, invalidDir);
+            moveUser(0, 20, invalidDir1, invalidDir2);
             break;
 
-          case "a":
-            moveUser(0, 0, invalidDir);
+          case "a": // "a" and "d" are along X-axis
+            moveUser(-20, 0, invalidDir1, invalidDir2);
             break;
 
           case "d":
             event.preventDefault();
-            moveUser(0, 0, invalidDir);
+            moveUser(20, 0, invalidDir1, invalidDir2);
             break;
         }
-      } else {
-        // TODO
-        // IMPLEMENT RESTRICTED MOVEMENT
-        // User cannot certain direction next to edge
       }
-
     },
-    [invalidDir, moveUser]
+    [invalidDir1, moveUser]
   );
 
 
