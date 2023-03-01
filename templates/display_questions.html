@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Questions</title>
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+    </head>
+    <body>
+        <div>
+            <form method="POST" action="">
+                <tr>
+                    <td>{{question[0] | safe}}</td>
+                </tr>
+                <br />
+                <br />
+                {{hint | safe}}
+                <br />
+                <button name="submit_button" type="submit" value="hint">
+                    Hint
+                </button>
+                <button name="submit_button" type="submit" value="back">
+                    Back
+                </button>
+            </form>
+        </div>
+    </body>
+</html>
