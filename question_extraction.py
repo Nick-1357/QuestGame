@@ -5,6 +5,7 @@ import mysql.connector
 from flask import url_for
 import sys
 import chatgpt
+import re
 
 
 myDb = mysql.connector.connect(
@@ -28,7 +29,8 @@ def choose_questions():
     try:
         if request.method == 'POST':
             # fetch form data
-            query = f"select question from questions where status = 'publish'  and category = 'Chapter{request.form['submit_button']}' ORDER by RAND() LIMIT 1"
+            # query = f"select question from questions where status = 'publish'  and category = 'Chapter{request.form['submit_button']}' ORDER by RAND() LIMIT 1"
+            query = "select question from questions where id = 1081"
             try:
                 cursor.execute(query)
                 question = cursor.fetchall()
@@ -45,9 +47,17 @@ def choose_questions():
 
 @app.route('/display_questions', methods=['GET', 'POST'])
 def display_questions():
-    question = session["question"]
-    hint = ""
+    question = session["question"][0][0]
+    
+    # define replacements
+    rep = {'<PRE class=ITS_Equation>': "", '<PRE class="ITS_Equation">': "", '<pre class="ITS_Equation">': "", "</pre>": "",
+           "</PRE>": "", "</sup>": "", "<latex>": "$$", "</latex>": "$$"}  
 
+    rep = dict((re.escape(k), v) for k, v in rep.items())
+    pattern = re.compile("|".join(rep.keys()))
+    question = pattern.sub(lambda m: rep[re.escape(m.group(0))], question)
+    hint = ""
+    
     if request.method == 'POST':
         # fetch form data
         if request.form['submit_button'] == 'hint':
