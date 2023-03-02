@@ -27,19 +27,19 @@ def choose_questions():
     try:
         if request.method == 'POST':
             # fetch form data
-            query = f"select question from questions where status = 'publish' ' ORDER by RAND() LIMIT 1"
+            query = f"select question,time, difficulty from questions where status = 'publish' ' ORDER by RAND() LIMIT 1"
             session["query"] = query
             return redirect(url_for('display_questions'))
 
     except mysql.connector.Error as error:
         return "Failed to create due to this error: " + repr(error)
 
-    return render_template('choose_questions.html')
-
 
 @app.route('/display_questions', methods=['GET', 'POST'])
 def display_questions():
     query = session["query"]
+    questionData = pd.read_sql(query, myDb)
+    timeAssociation(questionData)
     try:
         cursor.execute(query)
         res = cursor.fetchall()
@@ -54,18 +54,19 @@ def display_questions():
     except mysql.connector.Error as error:
         return "Failed to create due to this error: " + repr(error)
 
-    return render_template('display_questions.html', res=res)
-
 def timeAssociation(queryResult):
-    timeAssociations = {}
-    for results in queryResult:
-        if results.question in timeAssociations.keys():
-            currentList = timeAssociations.get(results.question)[0]
-            currentList.append(results.time)
-            medianVal = statistics.median(currentList)
-            timeAssociations[results.question] = [currentList, medianVal]
-        else:
-            timeAssociations[results.question] = [[results.time], results.time]
+    # timeAssociations = {}
+    # for results in queryResult:
+    #     if results.question in timeAssociations.keys():
+    #         currentList = timeAssociations.get(results.question)[0]
+    #         currentList.append(results.time)
+    #         medianVal = statistics.median(currentList)
+    #         timeAssociations[results.question] = [currentList, medianVal]
+    #     else:
+    #         timeAssociations[results.question] = [[results.time], results.time]
+    queryResult = queryResult.groupby(['question']).median()
+    print(queryResult)
+
             
 
 
