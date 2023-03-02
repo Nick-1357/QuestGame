@@ -38,10 +38,14 @@ def choose_questions():
                 res = cursor.fetchall()[0]
             except mysql.connector.Error as error:
                 return "Failed to create due to this error: " + repr(error)
-            
+
             session["qid"] = res[0]
             session["qtype"] = res[1]
-            session["question"] = res[2]
+            session["question"] = preprocess_question(res[2])
+            session["hint"] = ""
+            if res[1].lower() == "mc":
+                session["choices"] = retrieve_choices(session["qid"])
+
             return redirect(url_for('display_questions'))
 
     except mysql.connector.Error as error:
@@ -52,44 +56,44 @@ def choose_questions():
 
 @app.route('/display_questions', methods=['GET', 'POST'])
 def display_questions():
-    question = preprocess_question(session["question"])
 
-    hint = ""
-    choices = []
-    if session["qtype"].lower() == "mc":
-        choices = retrieve_choices(session["qid"])
-    
-    request_body = {"question": question, "hint": hint, "choices": choices}
-    
     if request.method == 'POST':
         # fetch form data
         if request.form['submit_button'] == 'hint':
             # generate hint
-            hint = chatgpt.generate_hint(question[0][0])
+            if not session["hint"]:
+                session["hint"] = chatgpt.generate_hint(session["question"])
+                
         elif request.form['submit_button'] == 'back':
             # back to choosing topic page
             return redirect(url_for('choose_questions'))
 
+    request_body = {"question": session["question"],
+                    "hint": session["hint"], "choices": session["choices"]}
     return render_template('display_questions.html', **request_body)
 
 
 def preprocess_question(question):
     # define replacements
-    rep = {'<pre class="ITS_Equation">': "", "</pre>": "", "<latex>": "$$", "</latex>": "$$"}  
+    rep = {'<pre class="ITS_Equation">': "",
+           "</pre>": "", "<latex>": "$$", "</latex>": "$$"}
 
     rep = dict((re.escape(k), v) for k, v in rep.items())
     pattern = re.compile("|".join(rep.keys()))
     question = str(BeautifulSoup(question, "lxml"))
     return pattern.sub(lambda m: rep[re.escape(m.group(0))], question)
 
+
 def retrieve_choices(id):
     choices = [f"answer{x}" for x in range(1, 10)]
-    query = "select " + ", ".join(choices) + f" from questions_mc where questions_id = {id}"
-    
+    query = "select " + ", ".join(choices) + \
+        f" from questions_mc where questions_id = {id}"
+
     try:
         cursor.execute(query)
-        res = [BeautifulSoup(choice, "lxml") for choice in cursor.fetchall()[0] if choice]
+        res = [str(BeautifulSoup(choice, "lxml"))
+               for choice in cursor.fetchall()[0] if choice]
     except mysql.connector.Error as error:
         print("Failed to create due to this error: " + repr(error))
-    
+
     return res

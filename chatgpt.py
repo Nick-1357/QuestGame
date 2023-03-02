@@ -13,7 +13,7 @@ def login():
 
 def generate_hint(question):
     chatbot = login()
-    prompt = "Give me a hint for the following question: " + question
+    prompt = "Give me a hint for the following question: " + question + "and surround code with '<pre>' and '</pre>'."
     for data in chatbot.ask(prompt):
         response = data["message"]
     return response
