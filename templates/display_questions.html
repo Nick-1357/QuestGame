@@ -2,18 +2,29 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Questions</title>
+        <title>Question</title>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ url_for('static', filename='styles.css')}}"
+        />
         <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
         <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
     </head>
     <body>
         <form method="POST" action="">
-            <tr>
-                <td>{{question | safe}}</td>
-            </tr>
+            {{question | safe}}
+            <br />
+
+            <div class="choices">
+                {%for choice in choices%} 
+                {{choice | safe}} 
+                {% endfor %}
+            </div>
             <br />
             {{hint | safe}}
             <br />
+
             <button name="submit_button" type="submit" value="hint">
                 Hint
             </button>

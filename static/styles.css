@@ -83,3 +83,8 @@ h1 {
     opacity: 1;
     right: 0;
 }
+
+.choices {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
