@@ -16,9 +16,17 @@
             {{question | safe}}
             <br />
 
-            <div class="choices">
-                {%for choice in choices%} 
-                {{choice | safe}} 
+            <div class="grid-container">
+                {%for choice in choices%}
+                <div class="choices">
+                    <input
+                        type="radio"
+                        id="choice{{loop.index}}"
+                        name="choices"
+                        value="choice{{loop.index}}"
+                    />
+                    <label for="choice{{loop.index}}">{{choice | safe}}</label>
+                </div>
                 {% endfor %}
             </div>
             <br />
