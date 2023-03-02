@@ -5,7 +5,6 @@ import mysql.connector
 from flask import url_for
 import sys
 import pandas as pd
-import statistics
 
 myDb = mysql.connector.connect(
     host="localhost",
