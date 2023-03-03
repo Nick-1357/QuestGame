@@ -22,32 +22,32 @@ export function* moveSaga(params: {
     | PutEffect<{ type: string; payload: string }>
     | CallEffect<true>
     > {
-        while(params.type !== RESET) {
-            yield put({
-                type: params.type.split("_")[1],
-                payload: params.payload
-            });
 
-            switch (params.type.split("_")[1]) {
-                case RIGHT:
-                    yield put(setInvalDir(LEFT));
-                    break;
-                
-                case LEFT:
-                    yield put(setInvalDir(RIGHT));
-                    break;
-                
-                case UP:
-                    yield put(setInvalDir(DOWN));
-                    break;
-                
-                case DOWN:
-                    yield put(setInvalDir(UP));
-                    break;
-            }
+        yield put({
+            type: params.type.split("_")[1],
+            payload: params.payload
+        });
 
-            yield delay(100);
-        }
+        // switch (params.type.split("_")[1]) {
+        //     case RIGHT:
+        //         yield put(setInvalDir(LEFT));
+        //         break;
+            
+        //     case LEFT:
+        //         yield put(setInvalDir(RIGHT));
+        //         break;
+            
+        //     case UP:
+        //         yield put(setInvalDir(DOWN));
+        //         break;
+            
+        //     case DOWN:
+        //         yield put(setInvalDir(UP));
+        //         break;
+        // }
+
+        yield delay(100);
+    
 }
 
 function* watcherSagas() {
