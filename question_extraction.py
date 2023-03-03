@@ -40,10 +40,11 @@ def choose_questions():
                 return "Failed to create due to this error: " + repr(error)
 
             session["qid"] = res[0]
-            session["qtype"] = res[1]
-            session["question"] = preprocess_question(res[2])
+            session["qtype"] = res[1].lower()
+            session["question"] = preprocess_text(res[2])
             session["hint"] = ""
-            if res[1].lower() == "mc":
+
+            if session["qtype"] == "mc":
                 session["choices"] = retrieve_choices(session["qid"])
 
             return redirect(url_for('display_questions'))
@@ -62,8 +63,10 @@ def display_questions():
         if request.form['submit_button'] == 'hint':
             # generate hint
             if not session["hint"]:
-                session["hint"] = chatgpt.generate_hint(session["question"])
-                
+                if session["qtype"] == "mc":
+                    session["hint"] = chatgpt.generate_hint_mc(
+                        session["question"], session["choices"])
+
         elif request.form['submit_button'] == 'back':
             # back to choosing topic page
             return redirect(url_for('choose_questions'))
@@ -73,7 +76,7 @@ def display_questions():
     return render_template('display_questions.html', **request_body)
 
 
-def preprocess_question(question):
+def preprocess_text(question):
     # define replacements
     rep = {'<pre class="ITS_Equation">': "",
            "</pre>": "", "<latex>": "$$", "</latex>": "$$"}
