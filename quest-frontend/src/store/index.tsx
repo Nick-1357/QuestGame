@@ -8,5 +8,4 @@ const store = configureStore({reducer: gameReducer, middleware: [sagaMiddleware]
 
 sagaMiddleware.run(watcherSagas);
 
-
 export default store;
