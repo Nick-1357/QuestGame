@@ -12,7 +12,7 @@ function App() {
           <Heading as ="h1"
           size="x1">
             Quest Game
-            <GameBoard height={600} width={500}/>
+            <GameBoard height={600} width={1000}/>
           </Heading>
         </Container>
       </ChakraProvider>
