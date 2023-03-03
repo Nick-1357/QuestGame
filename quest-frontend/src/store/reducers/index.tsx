@@ -4,12 +4,14 @@ export interface IGlobalState {
     user: IUserCoord[] | [];
     invalidDir: IDirCheck[];
     score: number
+    timeLeft: number
 };
 
 const globalState: IGlobalState = {
     user: [{x: 0, y: 0}],
     invalidDir: [{dir1: "", dir2: ""}],
-    score: 0
+    score: 0,
+    timeLeft: 100
 };
 
 const gameReducer = (state = globalState, action: any) => {

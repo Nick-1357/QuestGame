@@ -1,5 +1,6 @@
 import Popup from 'reactjs-popup'
 
+/*
 const Question = props => {
     return (<Popup trigger = {} >
         <p>{props.question}</p>
@@ -11,3 +12,4 @@ const Question = props => {
 }
 
 export default Question;
+*/
