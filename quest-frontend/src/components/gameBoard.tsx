@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { IGlobalState } from "../store/reducers";
-import { makeMove, MOVE_LEFT, MOVE_DOWN, MOVE_RIGHT, MOVE_UP, MOVE_IDLE } from "../store/actions";
+import { makeMove, MOVE_LEFT, MOVE_DOWN, MOVE_RIGHT, MOVE_UP } from "../store/actions";
 import { clearBoard, drawObject } from "../utils";
 
 export interface IGameBoard {
@@ -44,10 +44,6 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
       if (dy < 0 && invDir2 !== "UP") {
         dispatch(makeMove(dx, dy, MOVE_UP));
-      }
-      
-      if (dx === 0 && dy === 0) {
-        dispatch(makeMove(0, 0, MOVE_IDLE));
       }
     },
     [dispatch]
@@ -99,7 +95,6 @@ const GameBoard = ({height, width}: IGameBoard) => {
     };
 
   }, [handleKeyEvents, invalidDir1]);
-
 
 
     return (
