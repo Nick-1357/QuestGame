@@ -12,8 +12,6 @@ const globalState: IGlobalState = {
     score: 0
 };
 
-
-
 const gameReducer = (state = globalState, action: any) => {
     switch(action.type) {
         case RIGHT:
