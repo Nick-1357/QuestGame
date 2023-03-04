@@ -79,7 +79,7 @@ def display_questions():
 def preprocess_text(question):
     # define replacements
     rep = {'<pre class="ITS_Equation">': "",
-           "</pre>": "", "<latex>": "$$", "</latex>": "$$"}
+           "</pre>": "", "<latex>": "$", "</latex>": "$"}
 
     rep = dict((re.escape(k), v) for k, v in rep.items())
     pattern = re.compile("|".join(rep.keys()))
