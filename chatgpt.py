@@ -17,5 +17,12 @@ def generate_hint(question):
     for data in chatbot.ask(prompt):
         response = data["message"]
     return response
+
+def generate_question(question):
+    chatbot = login()
+    prompt = "Give me a similar question for the following question: " + question + "with answers on a new line"
+    for data in chatbot.ask(prompt):
+        response = data["message"]
+    return response
     
 
