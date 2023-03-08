@@ -12,25 +12,26 @@ export interface IGameBoard {
 const GameBoard = ({height, width}: IGameBoard) => {
   const canvasRef = useRef <HTMLCanvasElement | null> (null);
   const [context, setContext] = useState < CanvasRenderingContext2D | null> (null);
-  const [moved, setMoved] = useState(false);
+
   const invalidDirState = useSelector((state: IGlobalState) => state.invalidDir)
   const invalidDir1 = invalidDirState[0].dir1;
   const invalidDir2 = invalidDirState[0].dir2;
-
-  let dx = 0, dy = 0;
 
   const user1 = useSelector((state: IGlobalState) => state.user);
   // const [pos, setPos] = useState < IObjectBody > (
   //   generateRandomPosition(width - 20, height - 20)
   // );
+  let userXPos = 0;
+  let userYPos = 0;
 
   const dispatch = useDispatch();
 
 
   const moveUser = useCallback( 
     // Might need checking
+    // Somehow comparing userXPos and userYPos to width and height does not work
     (dx = 0, dy = 0, invDir1: string, invDir2: string) => {
-      if (dx > 0 && invDir1 !== "RIGHT") { // X-axis bound checking
+      if (dx > 0 && userXPos <= (width - 20)) { // X-axis bound checking
         dispatch(makeMove(dx, dy, MOVE_RIGHT));
       }
 
@@ -51,7 +52,6 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
   const handleKeyEvents = useCallback(
     (event: KeyboardEvent) => {
-      console.log("handleKeyEvents called");
       switch (event.key) {
         case "w": //"w" and "d" are along Y-axis; dy > 0 == DOWN; dy < 0 == UP
           moveUser(0, -20, invalidDir1, invalidDir2);
@@ -75,16 +75,13 @@ const GameBoard = ({height, width}: IGameBoard) => {
     [invalidDir1, invalidDir2, moveUser]
   );
 
-  // useEffect(() => {
-  //   moveUser(0, 0, invalidDir1, invalidDir2);
-  //   setMoved(false);
-  // }, [moved])
-
-
   useEffect(() => {
     setContext(canvasRef.current && canvasRef.current.getContext("2d"));
     clearBoard(context);
     drawObject(context, user1, "#91C483");
+
+    userXPos = user1[0].x;
+    userYPos = user1[0].y;
   }, [context, user1]);
 
   useEffect(() => {
