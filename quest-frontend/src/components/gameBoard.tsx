@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { IGlobalState } from "../store/reducers";
 import { makeMove, MOVE_LEFT, MOVE_DOWN, MOVE_RIGHT, MOVE_UP } from "../store/actions";
 import { IObjectBody, clearBoard, drawObject, generateRandomPosition } from "../utils";
+import { findRenderedComponentWithType } from "react-dom/test-utils";
 
 export interface IGameBoard {
     height: number,
@@ -23,7 +24,8 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const questionArray = [generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20)];
   const [pos, setPos] = useState(questionArray);
 
-  
+  const reachedQuestionArray = [{id:0,reached: false}, {id: 1, reached: false}, {id:2, reached:false}];
+  const [reachedQuestion, setReachedQuestion] = useState(reachedQuestionArray);
 
   const dispatch = useDispatch();
 
@@ -86,9 +88,35 @@ const GameBoard = ({height, width}: IGameBoard) => {
     setContext(canvasRef.current && canvasRef.current.getContext("2d"));
     clearBoard(context);
     drawObject(context, user1, "#91C483");
+    console.log(user1[0]);
     drawObject(context, pos,"#676FA3");
-
-  }, [context, user1]);
+    
+    if (user1[0].x === pos[0]?.x && user1[0].y === pos[0]?.y) {
+      setReachedQuestion(
+        reachedQuestion.map((question) =>
+          question.id ===0 ? {...question, found: true}: {...question}
+        )
+      );
+      console.log("reached first question");
+    } else if (user1[0].x === pos[1]?.x && user1[0].y === pos[1]?.y){
+      setReachedQuestion(
+        reachedQuestion.map((question) =>
+          question.id ===1 ? {...question, found: true}: {...question}
+        )
+      );
+      console.log("reached second question");
+    } else if (user1[0].x === pos[2]?.x && user1[0].y === pos[2]?.y){
+      setReachedQuestion(
+        reachedQuestion.map((question) =>
+          question.id ===2 ? {...question, found: true}: {...question}
+        )
+      );
+      console.log("reached third question");
+    }
+    
+    
+    
+  }, [context, user1, pos]);
 
   useEffect(() => {
     window.addEventListener("keypress", handleKeyEvents);
@@ -108,9 +136,11 @@ const GameBoard = ({height, width}: IGameBoard) => {
           }}
           height={height}
           width={width}
+          
         />
+        
     ); 
 }
 
 
-export default GameBoard
+export default GameBoard;
