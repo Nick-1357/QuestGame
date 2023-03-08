@@ -89,34 +89,43 @@ const GameBoard = ({height, width}: IGameBoard) => {
     clearBoard(context);
     drawObject(context, user1, "#91C483");
     console.log(user1[0]);
-    drawObject(context, pos,"#676FA3");
+    //drawObject(context, [pos[0]],"#676FA3");
+    for (let i=0;i<3;i++){
+      if (reachedQuestionArray[i]?.reached===false){
+        drawObject(context, [pos[i]],"#676FA3");
+      }
+    }//attempts to only draw the question if it's NOT reached: does not work
     
     if (user1[0].x === pos[0]?.x && user1[0].y === pos[0]?.y) {
+      //if it's consumed, we will change reached to true
       setReachedQuestion(
         reachedQuestion.map((question) =>
-          question.id ===0 ? {...question, found: true}: {...question}
+          question.id ===0 ? {...question, reached: true}: {...question}
         )
       );
       console.log("reached first question");
+      console.log(reachedQuestion);//conditionals correctly change reached to true
     } else if (user1[0].x === pos[1]?.x && user1[0].y === pos[1]?.y){
       setReachedQuestion(
         reachedQuestion.map((question) =>
-          question.id ===1 ? {...question, found: true}: {...question}
+          question.id ===1 ? {...question, reached: true}: {...question}
         )
       );
       console.log("reached second question");
+      console.log(reachedQuestion);
     } else if (user1[0].x === pos[2]?.x && user1[0].y === pos[2]?.y){
       setReachedQuestion(
         reachedQuestion.map((question) =>
-          question.id ===2 ? {...question, found: true}: {...question}
+          question.id ===2 ? {...question, reached: true}: {...question}
         )
       );
       console.log("reached third question");
+      console.log(reachedQuestion);
     }
     
     
     
-  }, [context, user1, pos]);
+  }, [context, user1, pos, reachedQuestion]);
 
   useEffect(() => {
     window.addEventListener("keypress", handleKeyEvents);
