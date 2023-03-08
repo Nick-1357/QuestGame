@@ -16,7 +16,7 @@ const globalState: IGlobalState = {
 
 const gameReducer = (state = globalState, action: any) => {
     switch(action.type) {
-        case RIGHT:
+        case RIGHT: //perform a certain set of operations
         case LEFT:
         case UP:
         case DOWN:

@@ -18,7 +18,7 @@ function App() {
               <GridItem> <ScoreBoard /></GridItem>
               <GridItem> <TimeLeft /> </GridItem>
             </Grid>
-            <GameBoard height={600} width={500}/>
+            <GameBoard height={500} width={500}/>
           </Heading>
         </Container>
       </ChakraProvider>

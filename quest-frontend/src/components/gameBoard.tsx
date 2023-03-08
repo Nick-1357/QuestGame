@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { IGlobalState } from "../store/reducers";
 import { makeMove, MOVE_LEFT, MOVE_DOWN, MOVE_RIGHT, MOVE_UP } from "../store/actions";
-import { clearBoard, drawObject } from "../utils";
+import { IObjectBody, clearBoard, drawObject, generateRandomPosition } from "../utils";
 
 export interface IGameBoard {
     height: number,
@@ -20,9 +20,10 @@ const GameBoard = ({height, width}: IGameBoard) => {
   let dx = 0, dy = 0;
 
   const user1 = useSelector((state: IGlobalState) => state.user);
-  // const [pos, setPos] = useState < IObjectBody > (
-  //   generateRandomPosition(width - 20, height - 20)
-  // );
+  const questionArray = [generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20)];
+  const [pos, setPos] = useState(questionArray);
+
+  
 
   const dispatch = useDispatch();
 
@@ -85,6 +86,8 @@ const GameBoard = ({height, width}: IGameBoard) => {
     setContext(canvasRef.current && canvasRef.current.getContext("2d"));
     clearBoard(context);
     drawObject(context, user1, "#91C483");
+    drawObject(context, pos,"#676FA3");
+
   }, [context, user1]);
 
   useEffect(() => {
