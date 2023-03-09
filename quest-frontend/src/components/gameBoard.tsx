@@ -1,9 +1,11 @@
+import { ChakraProvider, Container, Grid, GridItem, Heading } from '@chakra-ui/react'
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { IGlobalState } from "../store/reducers";
 import { makeMove, MOVE_LEFT, MOVE_DOWN, MOVE_RIGHT, MOVE_UP } from "../store/actions";
 import { IObjectBody, clearBoard, drawObject, generateRandomPosition } from "../utils";
 import { findRenderedComponentWithType } from "react-dom/test-utils";
+import Question from './Question';
 
 export interface IGameBoard {
     height: number,
@@ -17,6 +19,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const invalidDirState = useSelector((state: IGlobalState) => state.invalidDir)
   const invalidDir1 = invalidDirState[0].dir1;
   const invalidDir2 = invalidDirState[0].dir2;
+  
 
   let dx = 0, dy = 0;
 
@@ -26,6 +29,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
   const reachedQuestionArray = [{id:0,reached: false}, {id: 1, reached: false}, {id:2, reached:false}];
   const [reachedQuestion, setReachedQuestion] = useState(reachedQuestionArray);
+  const [currentQuestionID, setCurrentQuestionID] = useState(-1);
 
   const dispatch = useDispatch();
 
@@ -98,6 +102,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
           question.id ===0 ? {...question, reached: true}: {...question}
         )
       );
+      setCurrentQuestionID(0);
       console.log("reached first question");
       console.log(reachedQuestion);//conditionals correctly change reached to true
 
@@ -107,6 +112,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
           question.id ===1 ? {...question, reached: true}: {...question}
         )
       );
+      setCurrentQuestionID(1);
       console.log("reached second question");
       console.log(reachedQuestion);
     } else if (user1[0].x === pos[2]?.x && user1[0].y === pos[2]?.y && !reachedQuestion[2].reached){
@@ -115,6 +121,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
           question.id ===2 ? {...question, reached: true}: {...question}
         )
       );
+      setCurrentQuestionID(2);
       console.log("reached third question");
       console.log(reachedQuestion);
     }
@@ -134,6 +141,8 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
 
     return (
+        <Grid templateColumns='repeat(2, 1fr)' gap={130}>
+        <GridItem>
         <canvas
           ref={canvasRef}
           style={{
@@ -141,11 +150,14 @@ const GameBoard = ({height, width}: IGameBoard) => {
           }}
           height={height}
           width={width}
-          
         />
+        </GridItem>
+        <GridItem><Question questionID = {currentQuestionID}/></GridItem>
+        </Grid>
         
     ); 
 }
 
 
 export default GameBoard;
+
