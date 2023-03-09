@@ -6,6 +6,7 @@ import GameBoard from './components/gameBoard';
 import ScoreBoard from './components/scoreBoard';
 import TimeLeft from './components/timeLeft';
 
+
 function App() {
   return (
     <Provider store={store}>
@@ -14,7 +15,7 @@ function App() {
           <Heading as ="h1"
           size="x1">
             Quest Game
-            <Grid templateColumns='repeat (2, 1fr)' gap={6}>
+            <Grid templateColumns='repeat(2, 1fr)' gap={6}>
               <GridItem> <ScoreBoard /></GridItem>
               <GridItem> <TimeLeft /> </GridItem>
             </Grid>
