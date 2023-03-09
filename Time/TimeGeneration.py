@@ -64,6 +64,7 @@ def timeAssociation(queryResult):
     #     else:
     #         timeAssociations[results.question] = [[results.time], results.time]
     queryResult = queryResult.groupby(['question']).median()
+    return queryResult.to_json(orient = "records")
     print(queryResult)
 
             
