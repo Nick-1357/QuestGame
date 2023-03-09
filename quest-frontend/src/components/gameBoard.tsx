@@ -30,19 +30,19 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const moveUser = useCallback( 
     // Might need checking
     (dx = 0, dy = 0, invDir1: string, invDir2: string) => {
-      if (dx > 0 && invDir1 !== "RIGHT") { // X-axis bound checking
+      if (dx > 0 && dx < 200 && invDir1 !== "RIGHT") { // X-axis bound checking
         dispatch(makeMove(dx, dy, MOVE_RIGHT));
       }
 
-      if (dx < 0 && invDir1 !== "LEFT") {
+      if (dx < 200 && dx > 0 && invDir1 !== "LEFT") {
         dispatch(makeMove(dx, dy, MOVE_LEFT));
       }
 
-      if (dy > 0 && invDir2 !== "DOWN") {
+      if (dy > 0 && dy < 200 && invDir2 !== "DOWN") {
         dispatch(makeMove(dx, dy, MOVE_DOWN));
       }
 
-      if (dy < 0 && invDir2 !== "UP") {
+      if (dy < 200 && dx > 0 && invDir2 !== "UP") {
         dispatch(makeMove(dx, dy, MOVE_UP));
       }
     },
