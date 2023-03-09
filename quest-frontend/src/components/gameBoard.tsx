@@ -54,7 +54,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
   const handleKeyEvents = useCallback(
     (event: KeyboardEvent) => {
-      console.log("handleKeyEvents called");
+      // console.log("handleKeyEvents called");
       switch (event.key) {
         case "w": //"w" and "d" are along Y-axis; dy > 0 == DOWN; dy < 0 == UP
           moveUser(0, -20, invalidDir1, invalidDir2);
@@ -78,25 +78,20 @@ const GameBoard = ({height, width}: IGameBoard) => {
     [invalidDir1, invalidDir2, moveUser]
   );
 
-  // useEffect(() => {
-  //   moveUser(0, 0, invalidDir1, invalidDir2);
-  //   setMoved(false);
-  // }, [moved])
-
-
   useEffect(() => {
     setContext(canvasRef.current && canvasRef.current.getContext("2d"));
     clearBoard(context);
     drawObject(context, user1, "#91C483");
-    console.log(user1[0]);
+    // console.log(user1[0]);
     //drawObject(context, [pos[0]],"#676FA3");
+
     for (let i=0;i<3;i++){
-      if (reachedQuestionArray[i]?.reached===false){
-        drawObject(context, [pos[i]],"#676FA3");
+      if (reachedQuestion[i]?.reached===false){
+        drawObject(context, [pos[i]], "#676FA3");
       }
     }//attempts to only draw the question if it's NOT reached: does not work
     
-    if (user1[0].x === pos[0]?.x && user1[0].y === pos[0]?.y) {
+    if (user1[0].x === pos[0]?.x && user1[0].y === pos[0]?.y && !reachedQuestion[0].reached) {
       //if it's consumed, we will change reached to true
       setReachedQuestion(
         reachedQuestion.map((question) =>
@@ -105,7 +100,8 @@ const GameBoard = ({height, width}: IGameBoard) => {
       );
       console.log("reached first question");
       console.log(reachedQuestion);//conditionals correctly change reached to true
-    } else if (user1[0].x === pos[1]?.x && user1[0].y === pos[1]?.y){
+
+    } else if (user1[0].x === pos[1]?.x && user1[0].y === pos[1]?.y && !reachedQuestion[1].reached){
       setReachedQuestion(
         reachedQuestion.map((question) =>
           question.id ===1 ? {...question, reached: true}: {...question}
@@ -113,7 +109,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
       );
       console.log("reached second question");
       console.log(reachedQuestion);
-    } else if (user1[0].x === pos[2]?.x && user1[0].y === pos[2]?.y){
+    } else if (user1[0].x === pos[2]?.x && user1[0].y === pos[2]?.y && !reachedQuestion[2].reached){
       setReachedQuestion(
         reachedQuestion.map((question) =>
           question.id ===2 ? {...question, reached: true}: {...question}
