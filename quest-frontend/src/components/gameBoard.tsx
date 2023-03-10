@@ -102,7 +102,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
           question.id ===0 ? {...question, reached: true}: {...question}
         )
       );
-      setCurrentQuestionID(0);
+      setCurrentQuestionID(1);
       console.log("reached first question");
       console.log(reachedQuestion);//conditionals correctly change reached to true
 
@@ -112,7 +112,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
           question.id ===1 ? {...question, reached: true}: {...question}
         )
       );
-      setCurrentQuestionID(1);
+      setCurrentQuestionID(2);
       console.log("reached second question");
       console.log(reachedQuestion);
     } else if (user1[0].x === pos[2]?.x && user1[0].y === pos[2]?.y && !reachedQuestion[2].reached){
@@ -121,7 +121,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
           question.id ===2 ? {...question, reached: true}: {...question}
         )
       );
-      setCurrentQuestionID(2);
+      setCurrentQuestionID(3);
       console.log("reached third question");
       console.log(reachedQuestion);
     }
