@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import 'katex/dist/katex.min.css'
+import Latex from 'react-latex-next'
 
 const Question = ({questionID}: any) => {
     const [getMessage, setGetMessage] = useState<any | null>({})
@@ -15,9 +17,12 @@ const Question = ({questionID}: any) => {
     }, [questionID])
 
     if (questionID !== -1) {
+        console.log(getMessage.data.question)
         return (
             <div className="question">
-                {getMessage.data.question}
+                
+                <div dangerouslySetInnerHTML={{ __html: getMessage.data.question }} />
+                
             <button> Generate hint</button>
             <button> Submit answer</button>
             </div>

@@ -15,7 +15,7 @@ function App() {
           <Heading as ="h1"
           size="x1">
             Quest Game
-            <Grid templateColumns='repeat(2, 1fr)' gap={6}>
+            <Grid templateColumns='506px 506px' >
               <GridItem> <ScoreBoard /></GridItem>
               <GridItem> <TimeLeft /> </GridItem>
             </Grid>

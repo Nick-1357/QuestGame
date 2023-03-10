@@ -141,7 +141,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
 
     return (
-        <Grid templateColumns='repeat(2, 1fr)' gap={130}>
+        <Grid templateColumns='repeat(2, 1fr)' gap={50}>
         <GridItem>
         <canvas
           ref={canvasRef}
