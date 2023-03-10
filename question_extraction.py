@@ -46,8 +46,8 @@ def extract_question():
     response["question"] = preprocess_text(res[1])
     response["hint"] = ""
 
-    if response["qtype"] == "mc":
-        response["choices"] = retrieve_choices(id)
+    # if response["qtype"] == "mc":
+    #     response["choices"] = retrieve_choices(id)
 
     print(response)
     return response
