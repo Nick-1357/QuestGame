@@ -3,8 +3,8 @@ import {UP, DOWN, LEFT, RIGHT, UPDATE_SCORE, IUserCoord, IDirCheck } from "../ac
 export interface IGlobalState {
     user: IUserCoord[] | [];
     invalidDir: IDirCheck[];
-    score: number
-    timeLeft: number
+    score: number;
+    timeLeft: number;
 };
 
 const globalState: IGlobalState = {

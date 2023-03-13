@@ -27,10 +27,10 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const questionArray = [generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20)];
   const [pos, setPos] = useState(questionArray);
 
-  const reachedQuestionArray = [{id:0,reached: false, question: "question0"}, {id: 1, reached: false, question: "question1"}, {id:2, reached:false, question: "question2"}];
+  const reachedQuestionArray = [{questionID:0,questionContent: "0 question", answer: "0 answer", reached: false}, {questionID:1,questionContent: "first question", answer: "first answer", reached: false}, {questionID:2,questionContent: "second question", answer: "second answer", reached: false}];
   const [reachedQuestion, setReachedQuestion] = useState(reachedQuestionArray);
-  const [currentQuestionID, setCurrentQuestionID] = useState(-1);
-
+  const [currentQuestionID, setCurrentQuestionID] = useState(0);
+  const [currentQuestion, setCurrentQuestion] = useState();
   const dispatch = useDispatch();
 
 
@@ -100,13 +100,13 @@ const GameBoard = ({height, width}: IGameBoard) => {
         //if it's consumed, we will change reached to true
         setReachedQuestion(
           reachedQuestion.map((question) =>
-            question.id ===i ? {...question, reached: true}: {...question}
+            question.questionID ===i ? {...question, reached: true}: {...question}
           )
         );
-        setCurrentQuestionID(i);
-        console.log("reached question");
+        setCurrentQuestionID(i)
+        console.log(i);
         console.log(reachedQuestion);//conditionals correctly change reached to true
-  
+        window.removeEventListener("keypress", handleKeyEvents);//disables movement until submit button is pressed
       }
     }
     
@@ -134,7 +134,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
           width={width}
         />
         </GridItem>
-        <GridItem><Question questionID = {currentQuestionID}/></GridItem>
+        <GridItem><Question questionID={currentQuestionID} questionContent={reachedQuestion[currentQuestionID].questionContent} answer={reachedQuestion[currentQuestionID].answer} reached={reachedQuestion[currentQuestionID].reached}></Question></GridItem>
         </Grid>
         
     ); 
