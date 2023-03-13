@@ -27,7 +27,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const questionArray = [generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20)];
   const [pos, setPos] = useState(questionArray);
 
-  const reachedQuestionArray = [{id:0,reached: false}, {id: 1, reached: false}, {id:2, reached:false}];
+  const reachedQuestionArray = [{id:0,reached: false, question: "question0"}, {id: 1, reached: false, question: "question1"}, {id:2, reached:false, question: "question2"}];
   const [reachedQuestion, setReachedQuestion] = useState(reachedQuestionArray);
   const [currentQuestionID, setCurrentQuestionID] = useState(-1);
 
@@ -93,40 +93,22 @@ const GameBoard = ({height, width}: IGameBoard) => {
       if (reachedQuestion[i]?.reached===false){
         drawObject(context, [pos[i]], "#676FA3");
       }
-    }//attempts to only draw the question if it's NOT reached: does not work
+    }//draws the question if it's not reached yet
     
-    if (user1[0].x === pos[0]?.x && user1[0].y === pos[0]?.y && !reachedQuestion[0].reached) {
-      //if it's consumed, we will change reached to true
-      setReachedQuestion(
-        reachedQuestion.map((question) =>
-          question.id ===0 ? {...question, reached: true}: {...question}
-        )
-      );
-      setCurrentQuestionID(0);
-      console.log("reached first question");
-      console.log(reachedQuestion);//conditionals correctly change reached to true
-
-    } else if (user1[0].x === pos[1]?.x && user1[0].y === pos[1]?.y && !reachedQuestion[1].reached){
-      setReachedQuestion(
-        reachedQuestion.map((question) =>
-          question.id ===1 ? {...question, reached: true}: {...question}
-        )
-      );
-      setCurrentQuestionID(1);
-      console.log("reached second question");
-      console.log(reachedQuestion);
-    } else if (user1[0].x === pos[2]?.x && user1[0].y === pos[2]?.y && !reachedQuestion[2].reached){
-      setReachedQuestion(
-        reachedQuestion.map((question) =>
-          question.id ===2 ? {...question, reached: true}: {...question}
-        )
-      );
-      setCurrentQuestionID(2);
-      console.log("reached third question");
-      console.log(reachedQuestion);
+    for (let i=0;i<3;i++){
+      if (user1[0].x === pos[i]?.x && user1[0].y === pos[i]?.y && !reachedQuestion[i].reached) {
+        //if it's consumed, we will change reached to true
+        setReachedQuestion(
+          reachedQuestion.map((question) =>
+            question.id ===i ? {...question, reached: true}: {...question}
+          )
+        );
+        setCurrentQuestionID(i);
+        console.log("reached question");
+        console.log(reachedQuestion);//conditionals correctly change reached to true
+  
+      }
     }
-    
-    
     
   }, [context, user1, pos, reachedQuestion]);
 
