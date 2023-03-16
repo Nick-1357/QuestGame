@@ -1,8 +1,11 @@
+import { ChakraProvider, Container, Grid, GridItem, Heading } from '@chakra-ui/react'
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { IGlobalState } from "../store/reducers";
 import { makeMove, MOVE_LEFT, MOVE_DOWN, MOVE_RIGHT, MOVE_UP } from "../store/actions";
-import { clearBoard, drawObject } from "../utils";
+import { IObjectBody, clearBoard, drawObject, generateRandomPosition } from "../utils";
+import { findRenderedComponentWithType } from "react-dom/test-utils";
+import Question from './Question';
 
 export interface IGameBoard {
     height: number,
@@ -16,13 +19,17 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const invalidDirState = useSelector((state: IGlobalState) => state.invalidDir)
   const invalidDir1 = invalidDirState[0].dir1;
   const invalidDir2 = invalidDirState[0].dir2;
+  
+
+  let dx = 0, dy = 0;
 
   const user1 = useSelector((state: IGlobalState) => state.user);
-  // const [pos, setPos] = useState < IObjectBody > (
-  //   generateRandomPosition(width - 20, height - 20)
-  // );
-  let userXPos = 0;
-  let userYPos = 0;
+  const questionArray = [generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20)];
+  const [pos, setPos] = useState(questionArray);
+
+  const reachedQuestionArray = [{id:0,reached: false}, {id: 1, reached: false}, {id:2, reached:false}];
+  const [reachedQuestion, setReachedQuestion] = useState(reachedQuestionArray);
+  const [currentQuestionID, setCurrentQuestionID] = useState(-1);
 
   const dispatch = useDispatch();
 
@@ -52,6 +59,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
   const handleKeyEvents = useCallback(
     (event: KeyboardEvent) => {
+      // console.log("handleKeyEvents called");
       switch (event.key) {
         case "w": //"w" and "d" are along Y-axis; dy > 0 == DOWN; dy < 0 == UP
           moveUser(0, -20, invalidDir1, invalidDir2);
@@ -79,10 +87,49 @@ const GameBoard = ({height, width}: IGameBoard) => {
     setContext(canvasRef.current && canvasRef.current.getContext("2d"));
     clearBoard(context);
     drawObject(context, user1, "#91C483");
+    // console.log(user1[0]);
+    //drawObject(context, [pos[0]],"#676FA3");
 
-    userXPos = user1[0].x;
-    userYPos = user1[0].y;
-  }, [context, user1]);
+    for (let i=0;i<3;i++){
+      if (reachedQuestion[i]?.reached===false){
+        drawObject(context, [pos[i]], "#676FA3");
+      }
+    }//attempts to only draw the question if it's NOT reached: does not work
+    
+    if (user1[0].x === pos[0]?.x && user1[0].y === pos[0]?.y && !reachedQuestion[0].reached) {
+      //if it's consumed, we will change reached to true
+      setReachedQuestion(
+        reachedQuestion.map((question) =>
+          question.id ===0 ? {...question, reached: true}: {...question}
+        )
+      );
+      setCurrentQuestionID(1);
+      console.log("reached first question");
+      console.log(reachedQuestion);//conditionals correctly change reached to true
+
+    } else if (user1[0].x === pos[1]?.x && user1[0].y === pos[1]?.y && !reachedQuestion[1].reached){
+      setReachedQuestion(
+        reachedQuestion.map((question) =>
+          question.id ===1 ? {...question, reached: true}: {...question}
+        )
+      );
+      setCurrentQuestionID(2);
+      console.log("reached second question");
+      console.log(reachedQuestion);
+    } else if (user1[0].x === pos[2]?.x && user1[0].y === pos[2]?.y && !reachedQuestion[2].reached){
+      setReachedQuestion(
+        reachedQuestion.map((question) =>
+          question.id ===2 ? {...question, reached: true}: {...question}
+        )
+      );
+      setCurrentQuestionID(3);
+      console.log("reached third question");
+      console.log(reachedQuestion);
+    }
+    
+    
+    
+  }, [context, user1, pos, reachedQuestion]);
 
   useEffect(() => {
     window.addEventListener("keypress", handleKeyEvents);
@@ -95,6 +142,8 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
 
     return (
+        <Grid templateColumns='repeat(2, 1fr)' gap={50}>
+        <GridItem>
         <canvas
           ref={canvasRef}
           style={{
@@ -103,8 +152,13 @@ const GameBoard = ({height, width}: IGameBoard) => {
           height={height}
           width={width}
         />
+        </GridItem>
+        <GridItem><Question questionID = {currentQuestionID}/></GridItem>
+        </Grid>
+        
     ); 
 }
 
 
-export default GameBoard
+export default GameBoard;
+

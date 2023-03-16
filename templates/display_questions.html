@@ -2,16 +2,47 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
-        <title>Questions</title>
+        <title>Question</title>
+        <link
+            rel="stylesheet"
+            type="text/css"
+            href="{{ url_for('static', filename='styles.css')}}"
+        />
+        <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+        <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+        <script>
+            MathJax = {
+              tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']]
+              }
+            };
+            </script>
+            <script id="MathJax-script" async
+              src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+        </script>
     </head>
     <body>
         <form method="POST" action="">
-            <tr>
-                <td>{{question[0] | safe}}</td>
-            </tr>
+            {{question | safe}}
+            <br />
+
+            <div class="grid-container">
+                {%for choice in choices%}
+                <div class="choices">
+                    <input
+                        type="radio"
+                        id="choice{{loop.index}}"
+                        name="choices"
+                        value="choice{{loop.index}}"
+                    />
+                    <label for="choice{{loop.index}}">{{choice | safe}}</label>
+                </div>
+                {% endfor %}
+            </div>
             <br />
             {{hint | safe}}
             <br />
+
             <button name="submit_button" type="submit" value="hint">
                 Hint
             </button>

@@ -4,17 +4,19 @@ export interface IGlobalState {
     user: IUserCoord[] | [];
     invalidDir: IDirCheck[];
     score: number
+    timeLeft: number
 };
 
 const globalState: IGlobalState = {
     user: [{x: 0, y: 0}],
     invalidDir: [{dir1: "", dir2: ""}],
-    score: 0
+    score: 0,
+    timeLeft: 100
 };
 
 const gameReducer = (state = globalState, action: any) => {
     switch(action.type) {
-        case RIGHT:
+        case RIGHT: //perform a certain set of operations
         case LEFT:
         case UP:
         case DOWN:
