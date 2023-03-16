@@ -17,23 +17,30 @@ const Question = ({questionID}: any) => {
     }, [questionID])
 
     if (questionID !== -1) {
-        console.log(getMessage.data.question)
+        console.log(getMessage.data.question);
+    
+        // Split the message into parts using a custom delimiter
+        const parts = getMessage.data.question.split('$');
+    
         return (
-            <div className="question">
-                
-                <div dangerouslySetInnerHTML={{ __html: getMessage.data.question }} />
-                
+          <div className="question">
+            {parts.map((part: string, index: number) => {
+              // Render even-indexed parts as LaTeX
+              if (index % 2 === 0) {
+                return <Latex key={index}>{part}</Latex>;
+              }
+              // Render odd-indexed parts as plain text
+              else {
+                return <span key={index}>{part}</span>;
+              }
+            })}
             <button> Generate hint</button>
             <button> Submit answer</button>
-            </div>
+          </div>
         );
-    } else {
-        return (
-            <div className="question">
-                Reach a question tile first!
-            </div>
-        );
-    }
+      } else {
+        return <div className="question">Reach a question tile first!</div>;
+      }
     
 }
 
