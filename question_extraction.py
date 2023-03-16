@@ -24,35 +24,36 @@ else:
     print("Not connected")
 
 
-@app.route('/', methods=['GET', 'POST'])
-@app.route('/choose_questions', methods=['GET', 'POST'])
-def choose_questions():
+
+@app.route('/api/extract_question', methods=['GET', 'POST'])
+def extract_question():
+    
+    id = int(request.args.get("id"))
+    if id == -1:
+        return {}
+    
+    #select random for now
+    query = f"select qtype, question from questions where status = 'publish' ORDER by RAND() LIMIT 1"
+
     try:
-        if request.method == 'POST':
-            # fetch form data
-            # query = f"select id, qtype, question from questions where status = 'publish'  and category = 'Chapter{request.form['submit_button']}' ORDER by RAND() LIMIT 1"
-            query = f"select id, qtype, question from questions where id=1081"
-
-            try:
-                cursor.execute(query)
-                res = cursor.fetchall()[0]
-            except mysql.connector.Error as error:
-                return "Failed to create due to this error: " + repr(error)
-
-            session["qid"] = res[0]
-            session["qtype"] = res[1].lower()
-            session["question"] = preprocess_text(res[2])
-            session["hint"] = ""
-
-            if session["qtype"] == "mc":
-                session["choices"] = retrieve_choices(session["qid"])
-
-            return redirect(url_for('display_questions'))
-
+        cursor.execute(query)
+        res = cursor.fetchall()[0]
     except mysql.connector.Error as error:
-        print("Failed to create due to this error: " + repr(error))
+        return "Failed to create due to this error: " + repr(error)
 
-    return render_template('choose_questions.html')
+    response = {}
+    response["qtype"] = res[0].lower()
+    response["question"] = preprocess_text(res[1])
+    response["hint"] = ""
+
+    # if response["qtype"] == "mc":
+    #     response["choices"] = retrieve_choices(id)
+
+    print(response)
+    return response
+
+
+
 
 
 @app.route('/display_questions', methods=['GET', 'POST'])
@@ -79,7 +80,7 @@ def display_questions():
 def preprocess_text(question):
     # define replacements
     rep = {'<pre class="ITS_Equation">': "",
-           "</pre>": "", "<latex>": "$", "</latex>": "$"}
+           "</pre>": "", "<latex>": "#$", "</latex>": "$#"}
 
     rep = dict((re.escape(k), v) for k, v in rep.items())
     pattern = re.compile("|".join(rep.keys()))
