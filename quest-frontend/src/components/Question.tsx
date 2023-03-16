@@ -16,11 +16,11 @@ const Question = ({questionID}: any) => {
 
     }, [questionID])
 
-    if (questionID !== -1) {
+    if (questionID !== -1 && getMessage.data.question !== undefined) {
         console.log(getMessage.data.question);
     
         // Split the message into parts using a custom delimiter
-        const parts = getMessage.data.question.split('$');
+        const parts = getMessage.data.question.split('#');
     
         return (
           <div className="question">
