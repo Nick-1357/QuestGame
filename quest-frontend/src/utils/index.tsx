@@ -10,6 +10,10 @@ export interface IObjectBody {
     y: number;
 }
 
+export interface questPosDict {
+    [key: number]: number[];
+}
+
 export const drawObject = (
     context: CanvasRenderingContext2D | null,
     objectBody: IObjectBody[],
