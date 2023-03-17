@@ -7,6 +7,7 @@ import "./Question.css";
 const Question = ({ questionID }: any) => {
     const [message, setMessage] = useState<any | null>({});
     const [hintShown, setHintShown] = useState(false);
+    const [chatShown, setChatShown] = useState(false);
 
     useEffect(() => {
         axios
@@ -46,9 +47,11 @@ const Question = ({ questionID }: any) => {
                             );
                         }
                     )}
-                <div className="hint">{hintShown && <Latex>{"Hint: " + message.data.hint}</Latex>}</div>
+                {hintShown && <div className="hint"><Latex>{"Hint: " + message.data.hint}</Latex></div>}
+                {chatShown && <div className="chat"></div>}
                 <button className="buttonQuestion" onClick={() => setHintShown(!hintShown)}> Generate hint</button>
-                <button className="buttonQuestion"> Submit answer</button>
+                <button className="buttonQuestion" onClick={() => setChatShown(!chatShown)}> Ask ChatGPT</button>
+                <button className="buttonQuestionSubmit"> Submit answer</button>
             </div>
         );
     } else {
