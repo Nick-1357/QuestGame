@@ -1,0 +1,20 @@
+.question {
+    width: 450px;
+}
+
+.buttonQuestion {
+    background-color: lightgray;
+    border: none;
+    color: black;
+    padding: 10px 20px;
+    margin: 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+.choice {
+    display: flex;
+    flex-direction: row;
+}

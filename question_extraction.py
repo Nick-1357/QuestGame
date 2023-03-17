@@ -32,8 +32,7 @@ def extract_question():
     if id == -1:
         return {}
     
-    #select random for now
-    query = f"select qtype, question from questions where status = 'publish' ORDER by RAND() LIMIT 1"
+    query = f"select id, qtype, question from questions where status = 'publish' and id = {id}"
 
     try:
         cursor.execute(query)
@@ -42,16 +41,15 @@ def extract_question():
         return "Failed to create due to this error: " + repr(error)
 
     response = {}
-    response["qtype"] = res[0].lower()
-    response["question"] = preprocess_text(res[1])
-    response["hint"] = ""
+    response["qid"] = res[0]
+    response["qtype"] = res[1].lower()
+    response["question"] = preprocess_text(res[2])
+    response["hint"] = "Placeholder hint"
 
     if response["qtype"] == "mc":
-        response["choices"] = retrieve_choices(id)
-
-    print(response)
+        response["choices"] = retrieve_choices(response["qid"])
+    
     return response
-
 
 
 
@@ -95,7 +93,7 @@ def retrieve_choices(id):
 
     try:
         cursor.execute(query)
-        res = [str(BeautifulSoup(choice, "lxml"))
+        res = [preprocess_text(str(BeautifulSoup(choice, "lxml")))
                for choice in cursor.fetchall()[0] if choice]
     except mysql.connector.Error as error:
         print("Failed to create due to this error: " + repr(error))
