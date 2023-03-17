@@ -6,6 +6,7 @@ import "./Question.css";
 
 const Question = ({ questionID }: any) => {
     const [getMessage, setGetMessage] = useState<any | null>({});
+    const [hintShown, setHintShown] = useState(false);
 
     useEffect(() => {
         axios
@@ -19,6 +20,7 @@ const Question = ({ questionID }: any) => {
             .catch((error) => {
                 console.log(error);
             });
+        
     }, [questionID]);
 
     if (questionID !== -1 && getMessage.data.question !== undefined) {
@@ -43,7 +45,8 @@ const Question = ({ questionID }: any) => {
                             );
                         }
                     )}
-                <button className="buttonQuestion"> Generate hint</button>
+                <div>{hintShown && getMessage.data.hint}</div>
+                <button className="buttonQuestion" onClick={() => setHintShown(!hintShown)}> Generate hint</button>
                 <button className="buttonQuestion"> Submit answer</button>
             </div>
         );
