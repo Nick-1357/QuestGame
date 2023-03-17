@@ -32,8 +32,7 @@ def extract_question():
     if id == -1:
         return {}
     
-    #select random for now
-    query = f"select id, qtype, question from questions where status = 'publish' ORDER by RAND() LIMIT 1"
+    query = f"select id, qtype, question from questions where status = 'publish' and id = {id}"
 
     try:
         cursor.execute(query)

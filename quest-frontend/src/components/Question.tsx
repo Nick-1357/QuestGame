@@ -22,8 +22,6 @@ const Question = ({ questionID }: any) => {
     }, [questionID]);
 
     if (questionID !== -1 && getMessage.data.question !== undefined) {
-        console.log(getMessage.data.qid);
-
         return (
             <div className="question">
                 <Latex>{getMessage.data.question}</Latex>;
@@ -34,11 +32,11 @@ const Question = ({ questionID }: any) => {
                                 <div className="choice" key={index.toString()}>
                                     <input
                                         type="radio"
-                                        id={"choice" + index }
+                                        id={"choice" + index}
                                         name="choices"
-                                        value={"choice" +  index }
+                                        value={"choice" + index}
                                     />
-                                    <label htmlFor={"choice" +  index }>
+                                    <label htmlFor={"choice" + index}>
                                         <Latex>{choice}</Latex>
                                     </label>
                                 </div>
