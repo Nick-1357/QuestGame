@@ -3,8 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { IGlobalState } from "../store/reducers";
 import { makeMove, MOVE_LEFT, MOVE_DOWN, MOVE_RIGHT, MOVE_UP } from "../store/actions";
-import { IObjectBody, clearBoard, drawObject, generateRandomPosition } from "../utils";
-import { findRenderedComponentWithType } from "react-dom/test-utils";
+import { IObjectBody, clearBoard, drawObject, generateRandomPosition, questPosDict } from "../utils";
 import Question from './Question';
 
 export interface IGameBoard {
@@ -15,7 +14,6 @@ export interface IGameBoard {
 const GameBoard = ({height, width}: IGameBoard) => {
   const canvasRef = useRef <HTMLCanvasElement | null> (null);
   const [context, setContext] = useState < CanvasRenderingContext2D | null> (null);
-  const [moved, setMoved] = useState(false);
   const invalidDirState = useSelector((state: IGlobalState) => state.invalidDir)
   const invalidDir1 = invalidDirState[0].dir1;
   const invalidDir2 = invalidDirState[0].dir2;
@@ -31,31 +29,63 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const [reachedQuestion, setReachedQuestion] = useState(reachedQuestionArray);
   const [currentQuestionID, setCurrentQuestionID] = useState(-1);
 
-  const dispatch = useDispatch();
+  let questPosDict: questPosDict = {};
+  const [questionPosDict, setQuestionPostDict] = useState(questPosDict)
 
+  const dispatch = useDispatch();
 
   function updateArr(questArr: IObjectBody[]) {
     // Empty out both array
     questArr.length = 0;
     reachedQuestionArray.length = 0;
+    questPosDict = {};
 
     // Regenerate new questions with randomized position
     for (let i = 0; i < questAmt; i++) {
       questArr.push(generateRandomPosition(width - 20, height - 20));
       reachedQuestionArray.push({id: i, reached: false});
+
+      // For when user steps on a question
+      let xKey: number =  questArr[i].x
+      let yValue: number = questArr[i].y;
+    
+      questPosDict[xKey] = [];
+      questPosDict[xKey].push(yValue);
     }
 
     // Debugging purposes
     // console.log("QuestAMT:" , questAmt);
     // console.log("questARR: ", questArr)
     // console.log("reachedARR: ", reachedQuestionArray);
+    // console.log("posDICT: ", questPosDict);
 
     // Update the states
     setReachedQuestion(reachedQuestionArray);
     setPos(questArr);
+    setQuestionPostDict(questPosDict);
 
     return questArr;
 
+  }
+
+  function questionTriggerCheck() {
+    if (String(user1[0].x) in questionPosDict) {
+      if (questionPosDict[user1[0].x].includes(user1[0].y)) {
+
+        for (let idx = 0; idx < reachedQuestion.length; idx++) {
+          if (user1[0].x == pos[idx].x && user1[0].y == pos[idx].y && !reachedQuestion[idx].reached) {
+            reachedQuestion[idx].reached = true;
+
+
+            setCurrentQuestionID(3577);
+
+            // Debugging purposes
+            // console.log("questARR: ", pos)
+            // console.log("reachedARR: ", reachedQuestion);
+          }
+        }
+      }
+    }
   }
 
   useEffect(() => {
@@ -122,43 +152,12 @@ const GameBoard = ({height, width}: IGameBoard) => {
     clearBoard(context);
     drawObject(context, user1, "#91C483");
 
+    questionTriggerCheck();
+
     for (let i = 0; i < pos.length; i++){
       if (reachedQuestion[i]?.reached === false){
         drawObject(context, [pos[i]], "#676FA3");
       }
-    }//attempts to only draw the question if it's NOT reached: does not work
-
-
-    if (user1[0].x === pos[0]?.x && user1[0].y === pos[0]?.y && !reachedQuestion[0].reached) {
-      //if it's consumed, we will change reached to true
-      setReachedQuestion(
-        reachedQuestion.map((question) =>
-          question.id ===0 ? {...question, reached: true}: {...question}
-        )
-      );
-      
-      setCurrentQuestionID(982); //temporary id
-      console.log("reached first question");
-      console.log(reachedQuestion);//conditionals correctly change reached to true
-
-    } else if (user1[0].x === pos[1]?.x && user1[0].y === pos[1]?.y && !reachedQuestion[1].reached){
-      setReachedQuestion(
-        reachedQuestion.map((question) =>
-          question.id ===1 ? {...question, reached: true}: {...question}
-        )
-      );
-      setCurrentQuestionID(1073); //temporary id
-      console.log("reached second question");
-
-    } else if (user1[0].x === pos[2]?.x && user1[0].y === pos[2]?.y && !reachedQuestion[2].reached){
-      setReachedQuestion(
-        reachedQuestion.map((question) =>
-          question.id ===2 ? {...question, reached: true}: {...question}
-        )
-      );
-      setCurrentQuestionID(1081); //temporary id
-      console.log("reached third question");
-      console.log(reachedQuestion);
     }
     
     
