@@ -32,8 +32,7 @@ def extract_question():
     if id == -1:
         return {}
     
-    #select random for now
-    query = f"select qtype, question from questions where status = 'publish' ORDER by RAND() LIMIT 1"
+    query = f"select id, qtype, question from questions where status = 'publish' and id = {id}"
 
     try:
         cursor.execute(query)
@@ -42,14 +41,14 @@ def extract_question():
         return "Failed to create due to this error: " + repr(error)
 
     response = {}
-    response["qtype"] = res[0].lower()
-    response["question"] = preprocess_text(res[1])
+    response["qid"] = res[0]
+    response["qtype"] = res[1].lower()
+    response["question"] = preprocess_text(res[2])
     response["hint"] = ""
 
-    # if response["qtype"] == "mc":
-    #     response["choices"] = retrieve_choices(id)
-
-    print(response)
+    if response["qtype"] == "mc":
+        response["choices"] = retrieve_choices(response["qid"])
+    
     return response
 
 
@@ -80,7 +79,7 @@ def display_questions():
 def preprocess_text(question):
     # define replacements
     rep = {'<pre class="ITS_Equation">': "",
-           "</pre>": "", "<latex>": "#$", "</latex>": "$#"}
+           "</pre>": "", "<latex>": "$", "</latex>": "$"}
 
     rep = dict((re.escape(k), v) for k, v in rep.items())
     pattern = re.compile("|".join(rep.keys()))
@@ -95,7 +94,7 @@ def retrieve_choices(id):
 
     try:
         cursor.execute(query)
-        res = [str(BeautifulSoup(choice, "lxml"))
+        res = [preprocess_text(str(BeautifulSoup(choice, "lxml")))
                for choice in cursor.fetchall()[0] if choice]
     except mysql.connector.Error as error:
         print("Failed to create due to this error: " + repr(error))
