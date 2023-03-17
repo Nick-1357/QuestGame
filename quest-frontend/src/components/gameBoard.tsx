@@ -19,6 +19,8 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const invalidDir2 = invalidDirState[0].dir2;
   const [questAmt, setQuestAmt] = useState(3);
 
+  const questionIDs = [982, 1073, 1081]
+
   const user1 = useSelector((state: IGlobalState) => state.user);
 
   // const questionArray = [generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20)];
@@ -77,7 +79,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
             reachedQuestion[idx].reached = true;
 
 
-            setCurrentQuestionID(3577);
+            setCurrentQuestionID(questionIDs[idx]);
 
             // Debugging purposes
             // console.log("questARR: ", pos)

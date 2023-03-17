@@ -7,6 +7,7 @@ import sys
 import chatgpt
 import re
 from bs4 import BeautifulSoup
+import json
 
 
 myDb = mysql.connector.connect(
@@ -23,7 +24,8 @@ if (myDb.is_connected()):
 else:
     print("Not connected")
 
-
+f = open("pregenerated-hints.json")
+pregenerated_hints = json.load(f)
 
 @app.route('/api/extract_question', methods=['GET', 'POST'])
 def extract_question():
@@ -44,7 +46,7 @@ def extract_question():
     response["qid"] = res[0]
     response["qtype"] = res[1].lower()
     response["question"] = preprocess_text(res[2])
-    response["hint"] = "Placeholder hint"
+    response["hint"] = pregenerated_hints[str(id)]
 
     if response["qtype"] == "mc":
         response["choices"] = retrieve_choices(response["qid"])

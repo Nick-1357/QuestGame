@@ -18,3 +18,9 @@
     display: flex;
     flex-direction: row;
 }
+
+.hint {
+    margin: 10px;
+    margin-left: 0px;
+    padding: 5px;
+}

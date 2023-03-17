@@ -7,7 +7,7 @@ import "./Question.css";
 const Question = ({ questionID }: any) => {
     const [getMessage, setGetMessage] = useState<any | null>({});
     const [hintShown, setHintShown] = useState(false);
-
+    
     useEffect(() => {
         axios
             .get("http://localhost:8000/api/extract_question", {
@@ -22,6 +22,7 @@ const Question = ({ questionID }: any) => {
             });
         
     }, [questionID]);
+
 
     if (questionID !== -1 && getMessage.data.question !== undefined) {
         return (
@@ -45,7 +46,7 @@ const Question = ({ questionID }: any) => {
                             );
                         }
                     )}
-                <div>{hintShown && getMessage.data.hint}</div>
+                <div className="hint">{hintShown && <Latex>{"Hint: " + getMessage.data.hint}</Latex>}</div>
                 <button className="buttonQuestion" onClick={() => setHintShown(!hintShown)}> Generate hint</button>
                 <button className="buttonQuestion"> Submit answer</button>
             </div>
