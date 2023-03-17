@@ -24,11 +24,10 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const user1 = useSelector((state: IGlobalState) => state.user);
 
   // const questionArray = [generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20), generateRandomPosition(width-20,height-20)];
-  let questArr: IObjectBody[] = [generateRandomPosition(width - 20, height - 20)];
-
+  let questArr: IObjectBody[] = new Array();
   const [pos, setPos] = useState(questArr);
 
-  let reachedQuestionArray = [{id: 0, reached: false}, {id: 1, reached: false}, {id: 2, reached:false}];
+  let reachedQuestionArray = new Array();
   const [reachedQuestion, setReachedQuestion] = useState(reachedQuestionArray);
   const [currentQuestionID, setCurrentQuestionID] = useState(-1);
 
@@ -36,16 +35,22 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
 
   function updateArr(questArr: IObjectBody[]) {
-    console.log("UpdateArr called");
+    // Empty out both array
+    questArr.length = 0;
+    reachedQuestionArray.length = 0;
 
-    questArr = questArr.splice(0, questAmt);
-    reachedQuestionArray = reachedQuestionArray.splice(0, reachedQuestionArray.length);
-
+    // Regenerate new questions with randomized position
     for (let i = 0; i < questAmt; i++) {
       questArr.push(generateRandomPosition(width - 20, height - 20));
       reachedQuestionArray.push({id: i, reached: false});
     }
 
+    // Debugging purposes
+    // console.log("QuestAMT:" , questAmt);
+    // console.log("questARR: ", questArr)
+    // console.log("reachedARR: ", reachedQuestionArray);
+
+    // Update the states
     setReachedQuestion(reachedQuestionArray);
     setPos(questArr);
 
@@ -54,7 +59,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
   }
 
   useEffect(() => {
-    questArr = updateArr(questArr);
+    updateArr(questArr);
 
   }, [questAmt])
 
@@ -87,8 +92,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
       // console.log("handleKeyEvents called");
       switch (event.key) {
         case "z":
-          setQuestAmt(Math.floor((Math.random() * 9) + 1));
-          console.log("QUESTAMT", questAmt);
+          setQuestAmt(Math.floor((Math.random() * 10) + 1));
           break;
         
         case "w": //"w" and "d" are along Y-axis; dy > 0 == DOWN; dy < 0 == UP
@@ -124,6 +128,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
       }
     }//attempts to only draw the question if it's NOT reached: does not work
 
+
     if (user1[0].x === pos[0]?.x && user1[0].y === pos[0]?.y && !reachedQuestion[0].reached) {
       //if it's consumed, we will change reached to true
       setReachedQuestion(
@@ -144,7 +149,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
       );
       setCurrentQuestionID(1073); //temporary id
       console.log("reached second question");
-      console.log(reachedQuestion);
+
     } else if (user1[0].x === pos[2]?.x && user1[0].y === pos[2]?.y && !reachedQuestion[2].reached){
       setReachedQuestion(
         reachedQuestion.map((question) =>
