@@ -22,25 +22,29 @@ const Question = ({ questionID }: any) => {
     }, [questionID]);
 
     if (questionID !== -1 && getMessage.data.question !== undefined) {
-        console.log(getMessage.data.question);
-
-        // Split the message into parts using a custom delimiter
-        const parts = getMessage.data.question.split("#");
+        console.log(getMessage.data.qid);
 
         return (
             <div className="question">
-                {parts.map((part: string, index: number) => {
-                    // Render even-indexed parts as LaTeX
-                    if (index % 2 === 0) {
-                        return (
-                            <div dangerouslySetInnerHTML={{ __html: part }} />
-                        );
-                    }
-                    // Render odd-indexed parts as plain text
-                    else {
-                        return <Latex key={index}>{part}</Latex>;
-                    }
-                })}
+                <Latex>{getMessage.data.question}</Latex>;
+                {getMessage.data.choices !== undefined &&
+                    getMessage.data.choices.map(
+                        (choice: string, index: number) => {
+                            return (
+                                <div className="choice" key={index.toString()}>
+                                    <input
+                                        type="radio"
+                                        id={"choice" + index }
+                                        name="choices"
+                                        value={"choice" +  index }
+                                    />
+                                    <label htmlFor={"choice" +  index }>
+                                        <Latex>{choice}</Latex>
+                                    </label>
+                                </div>
+                            );
+                        }
+                    )}
                 <button className="buttonQuestion"> Generate hint</button>
                 <button className="buttonQuestion"> Submit answer</button>
             </div>
