@@ -2,7 +2,6 @@ from flask import Flask, request, jsonify, session
 from revChatGPT.V1 import Chatbot
 from app import app
 
-
 def login():
     chatbot = Chatbot(config={
         "email": "hilos47603@laserlip.com",
