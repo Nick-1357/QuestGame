@@ -199,7 +199,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
         </GridItem>
         <GridItem><Question questionID = {currentQuestionID}/></GridItem>
         <GridItem>
-          <ReviewSection array= {visited} setID={setCurrentQuestionID}></ReviewSection>
+          <ReviewSection array= {visited} setID={setCurrentQuestionID} questionArray = {questionIDs}></ReviewSection>
           
         </GridItem>
         </Grid>
