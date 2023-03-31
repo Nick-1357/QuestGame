@@ -1,10 +1,13 @@
-import { ChakraProvider, Container, Grid, GridItem, Heading } from '@chakra-ui/react'
+import { Grid, GridItem } from '@chakra-ui/react'
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from 'react-redux';
 import { IGlobalState } from "../store/reducers";
-import { makeMove, MOVE_LEFT, MOVE_DOWN, MOVE_RIGHT, MOVE_UP } from "../store/actions";
+import { makeMove, MOVE_LEFT, MOVE_DOWN, MOVE_RIGHT, MOVE_UP} from "../store/actions";
 import { IObjectBody, clearBoard, drawObject, generateRandomPosition, questPosDict } from "../utils";
 import Question from './Question';
+import ReviewSection from './ReviewSection';
+
+import "./ReviewSection.css"
 
 export interface IGameBoard {
     height: number,
@@ -14,10 +17,11 @@ export interface IGameBoard {
 const GameBoard = ({height, width}: IGameBoard) => {
   const canvasRef = useRef <HTMLCanvasElement | null> (null);
   const [context, setContext] = useState < CanvasRenderingContext2D | null> (null);
-  const invalidDirState = useSelector((state: IGlobalState) => state.invalidDir)
-  const invalidDir1 = invalidDirState[0].dir1;
-  const invalidDir2 = invalidDirState[0].dir2;
   const [questAmt, setQuestAmt] = useState(3);
+  const [prevRand, setPrevRand] = useState(-1);
+
+
+  const questionIDs = [982, 1073, 1081, 41, 345, 404, 744, 808, 2161]
 
   const user1 = useSelector((state: IGlobalState) => state.user);
 
@@ -30,8 +34,11 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const [currentQuestionID, setCurrentQuestionID] = useState(-1);
 
   let questPosDict: questPosDict = {};
-  const [questionPosDict, setQuestionPostDict] = useState(questPosDict)
+  const [questionPosDict, setQuestionPostDict] = useState(questPosDict);
 
+  let visitedQueue = new Array()
+  const [visited, setVisited] = useState(visitedQueue);
+  
   const dispatch = useDispatch();
 
   function updateArr(questArr: IObjectBody[]) {
@@ -73,11 +80,20 @@ const GameBoard = ({height, width}: IGameBoard) => {
       if (questionPosDict[user1[0].x].includes(user1[0].y)) {
 
         for (let idx = 0; idx < reachedQuestion.length; idx++) {
-          if (user1[0].x == pos[idx].x && user1[0].y == pos[idx].y && !reachedQuestion[idx].reached) {
+          if (user1[0].x === pos[idx].x && user1[0].y === pos[idx].y && !reachedQuestion[idx].reached) {
+            let randIdx = Math.floor(Math.random() * questionIDs.length); // Generates a random num between 0 to length(questionsID)
+
+            while (prevRand == randIdx) {
+              randIdx = Math.floor(Math.random() * questionIDs.length);
+            }
+
             reachedQuestion[idx].reached = true;
 
+            setCurrentQuestionID(questionIDs[randIdx]);
+            setPrevRand(randIdx);
 
-            setCurrentQuestionID(3577);
+            const prevQueue = [...visited, randIdx]; // Repeatedly concatenate old state array with new value
+            setVisited(prevQueue);  // Then re-assign it to the state array
 
             // Debugging purposes
             // console.log("questARR: ", pos)
@@ -95,22 +111,20 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
 
   const moveUser = useCallback( 
-    // Might need checking
-    (dx = 0, dy = 0, invDir1: string, invDir2: string) => {
-
-      if (dx > 0 && invDir1 !== "RIGHT") { // X-axis bound checking
+    (dx = 0, dy = 0) => {
+      if (dx > 0) {
         dispatch(makeMove(dx, dy, MOVE_RIGHT));
       }
 
-      if (dx < 0 && invDir1 !== "LEFT") {
+      if (dx < 0) {
         dispatch(makeMove(dx, dy, MOVE_LEFT));
       }
 
-      if (dy > 0 && invDir2 !== "DOWN") {
+      if (dy > 0) {
         dispatch(makeMove(dx, dy, MOVE_DOWN));
       }
 
-      if (dy < 0 && invDir2 !== "UP") {
+      if (dy < 0) {
         dispatch(makeMove(dx, dy, MOVE_UP));
       }
     },
@@ -119,32 +133,31 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
   const handleKeyEvents = useCallback(
     (event: KeyboardEvent) => {
-      // console.log("handleKeyEvents called");
       switch (event.key) {
         case "z":
           setQuestAmt(Math.floor((Math.random() * 10) + 1));
           break;
         
         case "w": //"w" and "d" are along Y-axis; dy > 0 == DOWN; dy < 0 == UP
-          moveUser(0, -20, invalidDir1, invalidDir2);
+          moveUser(0, -20);
           break;
 
         case "s":
-          moveUser(0, 20, invalidDir1, invalidDir2);
+          moveUser(0, 20);
           break;
 
         case "a": // "a" and "d" are along X-axis 
-          moveUser(-20, 0, invalidDir1, invalidDir2);
+          moveUser(-20, 0);
           break;
 
         case "d":
           event.preventDefault();   
-          moveUser(20, 0, invalidDir1, invalidDir2);
+          moveUser(20, 0);
           break;
       }
       
     },
-    [invalidDir1, invalidDir2, moveUser]
+    [moveUser]
   );
 
   useEffect(() => {
@@ -159,9 +172,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
         drawObject(context, [pos[i]], "#676FA3");
       }
     }
-    
-    
-    
+      
   }, [context, user1, pos, reachedQuestion, questAmt]);
 
   useEffect(() => {
@@ -171,11 +182,11 @@ const GameBoard = ({height, width}: IGameBoard) => {
       window.removeEventListener("keypress", handleKeyEvents);
     };
 
-  }, [handleKeyEvents, invalidDir1]);
+  }, [handleKeyEvents]);
 
 
     return (
-        <Grid templateColumns='repeat(2, 1fr)' gap={50}>
+        <Grid templateColumns='repeat(2, 1fr)' gap={50}  templateRows='1'>
         <GridItem>
         <canvas
           ref={canvasRef}
@@ -187,11 +198,16 @@ const GameBoard = ({height, width}: IGameBoard) => {
         />
         </GridItem>
         <GridItem><Question questionID = {currentQuestionID}/></GridItem>
+        <GridItem>
+          <ReviewSection array= {visited} setID={setCurrentQuestionID}></ReviewSection>
+          
+        </GridItem>
         </Grid>
+
+
         
     ); 
 }
-
 
 export default GameBoard;
 
