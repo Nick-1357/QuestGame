@@ -5,8 +5,9 @@ import Latex from "react-latex-next";
 import "./Question.css";
 
 const Question = ({ questionID }: any) => {
-    const [getMessage, setGetMessage] = useState<any | null>({});
+    const [message, setMessage] = useState<any | null>({});
     const [hintShown, setHintShown] = useState(false);
+    const [chatShown, setChatShown] = useState(false);
 
     useEffect(() => {
         axios
@@ -15,7 +16,7 @@ const Question = ({ questionID }: any) => {
             })
             .then((response) => {
                 console.log("SUCCESS", response);
-                setGetMessage(response);
+                setMessage(response);
             })
             .catch((error) => {
                 console.log(error);
@@ -23,12 +24,13 @@ const Question = ({ questionID }: any) => {
         
     }, [questionID]);
 
-    if (questionID !== -1 && getMessage.data.question !== undefined) {
+
+    if (questionID !== -1 && message.data.question !== undefined) {
         return (
             <div className="question">
-                <Latex>{getMessage.data.question}</Latex>;
-                {getMessage.data.choices !== undefined &&
-                    getMessage.data.choices.map(
+                <Latex>{message.data.question}</Latex>;
+                {message.data.choices !== undefined &&
+                    message.data.choices.map(
                         (choice: string, index: number) => {
                             return (
                                 <div className="choice" key={index.toString()}>
@@ -45,13 +47,15 @@ const Question = ({ questionID }: any) => {
                             );
                         }
                     )}
-                <div>{hintShown && getMessage.data.hint}</div>
+                {hintShown && <div className="hint"><Latex>{"Hint: " + message.data.hint}</Latex></div>}
+                {chatShown && <div className="chat"></div>}
                 <button className="buttonQuestion" onClick={() => setHintShown(!hintShown)}> Generate hint</button>
-                <button className="buttonQuestion"> Submit answer</button>
+                <button className="buttonQuestion" onClick={() => setChatShown(!chatShown)}> Ask ChatGPT</button>
+                <button className="buttonQuestionSubmit"> Submit answer</button>
             </div>
         );
     } else {
-        return <div className="question">Reach a question tile first!</div>;
+        return <div className="question">Reach a question tile!</div>;
     }
 };
 

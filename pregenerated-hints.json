@@ -1,0 +1,5 @@
+{
+    "982": "The discrete-time frequency $\\hat\\omega$ is equal to the continuous-time frequency $\\omega$ normalized by the sampling frequency $f_s$. Therefore, you need to find the answer choice that has the same normalized frequency as the original signal.",
+    "1073": "Recall that the Z-transform of a unit delay sequence is $z^{-1}$ and the Z-transform of a Kronecker delta sequence is 1. Therefore, to find the Z-transform of $g[n]$, you can first express $g[n]$ in terms of $h[n]$, use the linearity property of the Z-transform, and then apply the Z-transform of a unit delay.",
+    "1081": "Recall that the complex amplitude of a complex exponential signal is the magnitude of the phasor representing the signal. In this case, the phasor can be represented by $e^{j\\frac{\\pi}{3}}$, which has a magnitude of 1. Therefore, to find the complex amplitude $X$, you can simply multiply the amplitude of the cosine signal by $e^{j\\frac{\\pi}{3}}$."
+}
