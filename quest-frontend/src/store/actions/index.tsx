@@ -4,6 +4,7 @@ export const MOVE_LEFT = "MOVE_LEFT";
 export const MOVE_UP = "MOVE_UP";
 export const MOVE_DOWN = "MOVE_DOWN";
 
+
 // Actions for reducers (Event Listener)
 export const RIGHT = "RIGHT";
 export const LEFT = "LEFT";
