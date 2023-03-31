@@ -44,7 +44,7 @@ def extract_question():
     response["qid"] = res[0]
     response["qtype"] = res[1].lower()
     response["question"] = preprocess_text(res[2])
-    response["hint"] = "Placeholder hint"
+    response["hint"] = pregenerated_hints[str(id)] if str(id) in pregenerated_hints else "No hint provided"
 
     if response["qtype"] == "mc":
         response["choices"] = retrieve_choices(response["qid"])
