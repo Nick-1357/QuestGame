@@ -5,10 +5,10 @@ import Latex from "react-latex-next";
 import "./ReviewSection.css";
 
 
-const ReviewSection = ({ array, setID } : any) => {
+const ReviewSection = ({ array, setID, questionArray } : any) => {
     return (
         array.map((item: any, idx: any) => (
-            <button className="buttonReview" value={item} onClick={() => {setID(item)}}> Question ID: {item} </button>
+            <button className="buttonReview" key={item} onClick={() => {setID(questionArray[item])}}> Question ID: {questionArray[item]} </button>
         ))
     )
 }
