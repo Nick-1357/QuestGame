@@ -1,0 +1,4 @@
+{
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "typescript.tsdk": "./quest-frontend/node_modules/typescript/lib"
+}

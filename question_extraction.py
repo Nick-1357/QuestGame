@@ -50,6 +50,7 @@ def extract_question():
 
     if response["qtype"] == "mc":
         response["choices"] = retrieve_choices(response["qid"])
+        response["weights"] = retrieve_weights(response["qid"])
     
     return response
 
@@ -100,4 +101,15 @@ def retrieve_choices(id):
     except mysql.connector.Error as error:
         print("Failed to create due to this error: " + repr(error))
 
+    return res
+
+def retrieve_weights(id):
+    weights = [f"weight{x}" for x in range(1, 10)]
+    query = "select " + ", ".join(weights) + \
+        f" from questions_mc where questions_id = {id}"
+    try:
+        cursor.execute(query)
+        res = [choice for choice in cursor.fetchall()[0] if choice != None]
+    except mysql.connector.Error as error:
+        print("Failed to create due to this error: " + repr(error))
     return res

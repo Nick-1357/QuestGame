@@ -8,6 +8,8 @@ const Question = ({ questionID }: any) => {
     const [message, setMessage] = useState<any | null>({});
     const [hintShown, setHintShown] = useState(false);
     const [chatShown, setChatShown] = useState(false);
+    const [answered, setAnswered] = useState(false);
+    const [choiceSelected, setChoiceSelected] = useState(0);
 
     useEffect(() => {
         axios
@@ -21,9 +23,7 @@ const Question = ({ questionID }: any) => {
             .catch((error) => {
                 console.log(error);
             });
-        
     }, [questionID]);
-
 
     if (questionID !== -1 && message.data.question !== undefined) {
         return (
@@ -39,6 +39,9 @@ const Question = ({ questionID }: any) => {
                                         id={"choice" + index}
                                         name="choices"
                                         value={"choice" + index}
+                                        onClick={() =>
+                                            setChoiceSelected(index + 1)
+                                        }
                                     />
                                     <label htmlFor={"choice" + index}>
                                         <Latex>{choice}</Latex>
@@ -47,11 +50,39 @@ const Question = ({ questionID }: any) => {
                             );
                         }
                     )}
-                {hintShown && <div className="hint"><Latex>{"Hint: " + message.data.hint}</Latex></div>}
-                {chatShown && <div className="chat"></div>}
-                <button className="buttonQuestion" onClick={() => setHintShown(!hintShown)}> Generate hint</button>
-                <button className="buttonQuestion" onClick={() => setChatShown(!chatShown)}> Ask ChatGPT</button>
-                <button className="buttonQuestionSubmit"> Submit answer</button>
+                {answered && (
+                    <div className="result">
+                        {message.data.weights[choiceSelected] === 100
+                            ? "Correct"
+                            : "Incorrect"}
+                    </div>
+                )}
+                {hintShown && (
+                    <div className="hint">
+                        <Latex>{"Hint: " + message.data.hint}</Latex>
+                    </div>
+                )}
+                <button
+                    className="buttonQuestion"
+                    onClick={() => setHintShown(!hintShown)}
+                >
+                    {" "}
+                    Generate hint
+                </button>
+                <button
+                    className="buttonQuestion"
+                    onClick={() => setChatShown(!chatShown)}
+                >
+                    {" "}
+                    Ask ChatGPT
+                </button>
+                <button
+                    className="buttonQuestionSubmit"
+                    onClick={() => setAnswered(true)}
+                >
+                    {" "}
+                    Submit answer
+                </button>
             </div>
         );
     } else {

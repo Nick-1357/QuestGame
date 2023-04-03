@@ -21,7 +21,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const [prevRand, setPrevRand] = useState(-1);
 
 
-  const questionIDs = [982, 1073, 1081, 41, 345, 404, 744, 808, 2161]
+  const questionIDs = [1, 3, 6, 7, 982, 1073, 1081]
 
   const user1 = useSelector((state: IGlobalState) => state.user);
 
@@ -186,7 +186,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
 
     return (
-        <Grid templateColumns='repeat(2, 1fr)' gap={50}  templateRows='1'>
+        <Grid templateColumns='repeat(2, 1fr)' gap={50}  templateRows='2'>
         <GridItem>
         <canvas
           ref={canvasRef}
