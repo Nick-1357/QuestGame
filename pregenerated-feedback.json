@@ -1,0 +1,54 @@
+{
+    "1": [
+        "Incorrect. The expression cos(2*π*1336*tt) * cos(2*π*770*tt) generates the product of two sinusoids, but a DTMF signal consists of the sum of two sinusoids. The frequencies used in this expression are also incorrect for generating the DTMF tone for the number 5.",
+        "Correct. The expression cos(2*π*1336*tt) + cos(2*π*770*tt) generates the sum of two sinusoids, which is the correct way to generate a DTMF signal. The frequencies used in this expression are also correct for generating the DTMF tone for the number 5.",
+        "Incorrect. This expression generates a single sinusoid at the frequency 1336*770 Hz, which is not the correct way to generate a DTMF signal.",
+        "Incorrect. This expression generates a single sinusoid at the frequency (1336+770) Hz, which is not the correct way to generate a DTMF signal.",
+        "Incorrect. The expression cos(2*π*(1336/fs)*tt) * cos(2*π*(770/fs)*tt) generates the product of two sinusoids at the normalized frequencies (1336/fs) and (770/fs), but we need the actual frequencies of the DTMF tones to generate the appropriate signal.",
+        "Incorrect. The expression cos(2*π*(1336/fs)*tt) + cos(2*π*(770/fs)*tt) generates the sum of two sinusoids at the normalized frequencies (1336/fs) and (770/fs), but we need the actual frequencies of the DTMF tones to generate the appropriate signal.",
+        "Incorrect. This expression generates a single sinusoid at the frequency ((1336+770)/fs) Hz, which is not the correct way to generate a DTMF signal."
+    ],
+    "3": [
+        "Incorrect: Negative frequencies do not represent frequencies that appear below ½fs on a plot.",
+        "Incorrect: A negative Fourier series component represents the complex part of the signal, not the imaginary part.",
+        "Correct: Negative Fourier series components represent a frequency with a negative value in the complex exponential, when added to a positive (absolute value) frequency component with the same amplitude, a real signal will result.",
+        "Incorrect: A negative frequency in the Fourier series represents the same signal component as the positive (absolute value) frequency, not with a negative amplitude."
+    ],
+    "6": [
+        "Incorrect: This system is non-linear, as the output is not directly proportional to the input.",
+        "Incorrect: This system is linear, but not time-invariant. Shifting the input by a certain amount results in a different shift in the output.",
+        "Correct: This system is non-linear, but time-invariant. This is because the exponential function is a non-linear function, but the input-output relationship is time-invariant.",
+        "Incorrect: This system is both non-linear and time-varying. Shifting the input by a certain amount results in a different shift in the output, and the output is also a non-linear function of the input."
+    ],
+    "7": [
+        "Incorrect. The first argument of soundsc should be the signal to be played, while the second argument should be the sampling frequency.",
+        "Incorrect. The first argument of soundsc should be the signal to be played, while the second argument should be the sampling frequency.",
+        "Correct. The first argument of soundsc should be the signal to be played, while the second argument should be the sampling frequency.",
+        "Incorrect. The sampling frequency of the signal is 10000 Hz, not 8000 Hz.",
+        "Incorrect. The sampling frequency of the signal is 10000 Hz, not 3000 Hz.",
+        "Incorrect. The second argument of soundsc should be the sampling frequency, not the duration of the signal.",
+        "Incorrect. The second argument of soundsc should be the sampling frequency, not the duration of the signal.",
+        "Incorrect. The second argument of soundsc should be the sampling frequency of the signal, not an arbitrary value.",
+        "Incorrect. The sampling frequency of the signal is 10000 Hz, not 8000 Hz."
+    ],
+    "982": [
+        "Incorrect. The given signal is a cosine function with a frequency of 4200 Hz. Adding a phase shift of $\\pi/2$ will result in a signal that is shifted in time and has a different frequency than the original signal.",
+        "Incorrect. The given signal has a frequency of 4200 Hz. A cosine function with a frequency of 3800 Hz will result in a sampled signal with a different discrete-time frequency than the original signal.",
+        "Incorrect. The given signal has a frequency of 4200 Hz. A cosine function with a frequency of 11800 Hz will result in a sampled signal with a different discrete-time frequency than the original signal.",
+        "Correct. According to the sampling theorem, a signal with a maximum frequency of $f_{max}$ can be reconstructed from its samples if it is sampled at a rate of at least $2f_{max}$. Since the given signal has a frequency of 4200 Hz, it can be reconstructed from its samples if it is sampled at a rate of at least $2\times 4200 = 8400$ Hz. Sampling the signal at 8000 Hz will result in aliasing, where the discrete-time frequency of the sampled signal is not equal to the continuous-time frequency of the original signal. However, if we sample a signal with a frequency of 3800 Hz or 11800 Hz, the resulting discrete-time frequency will be equal to the original discrete-time frequency of the signal, since they are both multiples of the sampling frequency of 8000 Hz. Therefore, all of the above signals will yield a sampled signal with the same discrete-time frequency as the original signal.",
+        "Incorrect. This choice is incorrect because it suggests that none of the signals can yield a sampled signal with the same discrete-time frequency as the original signal. However, as explained in the feedback for choice 4, there are signals that can yield a sampled signal with the same discrete-time frequency as the original signal."
+    ],
+    "1073": [
+        "Correct. $G(z) = z^{-1} H(z) = z^{-1} (1 - z^{-1}) = z^{-1} - z^{-2}$.",
+        "Incorrect. This is equal to $H(z)$, not $G(z)$.",
+        "Incorrect. This is equal to $1 - z^{-2}$, not $G(z)$.",
+        "Incorrect. This is equal to $1 - z^{-1} + z^{-2}$, not $G(z)$."
+    ],
+    "1081": [
+        "Incorrect. The correct expression for the complex amplitude is $X = 7e^{j\\pi/3}$ which can be written in MATLAB notation as X = 7exp(1jpi/3).",
+        "Incorrect. The correct expression for the complex amplitude is $X = 7e^{j\\pi/3}$ which can be written in MATLAB notation as X = 7exp(1jpi/3).",
+        "'Incorrect. The correct expression for the complex amplitude is $X = 7e^{j\\pi/3}$ which can be written in MATLAB notation as X = 7exp(1jpi/3).",
+        "Correct. The complex amplitude $X$ can be defined in MATLAB notation as X = 7exp(1jpi/3).",
+        "Incorrect - This expression is equivalent to the original signal without any complex amplitude. The correct expression for the complex amplitude is $X = 7e^{j\\pi/3}$ which can be written in MATLAB notation as X = 7exp(1jpi/3)."
+    ]
+}

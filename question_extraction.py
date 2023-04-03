@@ -24,8 +24,11 @@ if (myDb.is_connected()):
 else:
     print("Not connected")
 
-f = open("pregenerated-hints.json")
-pregenerated_hints = json.load(f)
+f_hints = open("pregenerated-hints.json")
+pregenerated_hints = json.load(f_hints)
+
+f_feedback = open("pregenerated-feedback.json")
+pregenerated_feedback = json.load(f_feedback)
 
 @app.route('/api/extract_question', methods=['GET', 'POST'])
 def extract_question():
@@ -47,6 +50,7 @@ def extract_question():
     response["qtype"] = res[1].lower()
     response["question"] = preprocess_text(res[2])
     response["hint"] = pregenerated_hints[str(id)] if str(id) in pregenerated_hints else "No hint provided"
+    response["feedback"] = pregenerated_feedback[str(id)] if str(id) in pregenerated_feedback else "No feedback provided"
 
     if response["qtype"] == "mc":
         response["choices"] = retrieve_choices(response["qid"])

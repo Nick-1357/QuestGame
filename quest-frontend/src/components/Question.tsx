@@ -52,9 +52,7 @@ const Question = ({ questionID }: any) => {
                     )}
                 {answered && (
                     <div className="result">
-                        {message.data.weights[choiceSelected] === 100
-                            ? "Correct"
-                            : "Incorrect"}
+                        {message.data.feedback[choiceSelected]}
                     </div>
                 )}
                 {hintShown && (
@@ -78,7 +76,12 @@ const Question = ({ questionID }: any) => {
                 </button>
                 <button
                     className="buttonQuestionSubmit"
-                    onClick={() => setAnswered(true)}
+                    onClick={() => {
+                        setAnswered(true)
+                        if (message.data.weights[choiceSelected] === 100) {
+                            // Increase score
+                        }
+                    }}
                 >
                     {" "}
                     Submit answer
