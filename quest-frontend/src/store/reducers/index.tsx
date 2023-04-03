@@ -1,4 +1,4 @@
-import {UP, DOWN, LEFT, RIGHT, UPDATE_SCORE, IUserCoord, IDirCheck } from "../actions";
+import {UP, DOWN, LEFT, RIGHT, UPDATE_SCORE, IUserCoord } from "../actions";
 
 export interface IGlobalState {
     user: IUserCoord[] | [];
@@ -33,6 +33,12 @@ const gameReducer = (state = globalState, action: any) => {
 
             default:
                 return state;
+
+        case UPDATE_SCORE:
+            return {
+                ...state,
+                score: state.score + 1,
+            }
     }
 };
 

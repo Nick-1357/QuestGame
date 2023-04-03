@@ -3,6 +3,8 @@ import axios from "axios";
 import "katex/dist/katex.min.css";
 import Latex from "react-latex-next";
 import "./Question.css";
+import { UPDATE_SCORE, updateScore } from "../store/actions";
+import { useDispatch } from 'react-redux';
 
 const Question = ({ questionID }: any) => {
     const [message, setMessage] = useState<any | null>({});
@@ -10,6 +12,8 @@ const Question = ({ questionID }: any) => {
     const [chatShown, setChatShown] = useState(false);
     const [answered, setAnswered] = useState(false);
     const [choiceSelected, setChoiceSelected] = useState(0);
+
+    const dispatch = useDispatch()
 
     useEffect(() => {
         axios
@@ -80,6 +84,7 @@ const Question = ({ questionID }: any) => {
                         setAnswered(true)
                         if (message.data.weights[choiceSelected] === 100) {
                             // Increase score
+                            dispatch(updateScore(UPDATE_SCORE))
                         }
                     }}
                 >
