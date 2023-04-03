@@ -22,6 +22,9 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
 
   const questionIDs = [1, 3, 6, 7, 982, 1073, 1081]
+  const questionDiff = [0, 0, 2, 0, 1, 1, 2]
+  const diffColors = ["#008450", "#EFB700", "#B81D13"]
+
 
   const user1 = useSelector((state: IGlobalState) => state.user);
 
