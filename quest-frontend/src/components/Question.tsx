@@ -40,7 +40,7 @@ const Question = ({ questionID }: any) => {
                                         name="choices"
                                         value={"choice" + index}
                                         onClick={() =>
-                                            setChoiceSelected(index + 1)
+                                            setChoiceSelected(index)
                                         }
                                     />
                                     <label htmlFor={"choice" + index}>
