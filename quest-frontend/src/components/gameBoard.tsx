@@ -20,9 +20,14 @@ const GameBoard = ({height, width}: IGameBoard) => {
   const [questAmt, setQuestAmt] = useState(3);
   const [prevRand, setPrevRand] = useState(-1);
 
+  enum Diff {
+    EASY,
+    MED,
+    HARD
+  }
 
   const questionIDs = [1, 3, 6, 7, 982, 1073, 1081]
-  const questionDiff = [0, 0, 2, 0, 1, 1, 2]
+  const questionDiff = [Diff.EASY, Diff.EASY, Diff.HARD, Diff.EASY, Diff.MED, Diff.MED, Diff.HARD]
   const diffColors = ["#008450", "#EFB700", "#B81D13"]
 
 
@@ -172,7 +177,8 @@ const GameBoard = ({height, width}: IGameBoard) => {
 
     for (let i = 0; i < pos.length; i++){
       if (reachedQuestion[i]?.reached === false){
-        drawObject(context, [pos[i]], "#676FA3");
+        let quesColor = diffColors[questionDiff[i]];
+        drawObject(context, [pos[i]], quesColor);
       }
     }
       
