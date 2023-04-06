@@ -4,6 +4,7 @@ questionData = fetch("./questionData.json")
 questionTimes = JSON.parse(questionData)
 for (var key in questionTimes){
     var timeLeft = questionTimes[key]
+    while (timeLeft != 0) {
     if (timeLeft <= 0) {
         clearInterval(createTimer);
         document.getElementById("countdown").innerHTML = "You're out of time!";
@@ -15,3 +16,5 @@ for (var key in questionTimes){
     timeLeft -= 1;
     }
 }
+}
+<div id="countdown"></div>
