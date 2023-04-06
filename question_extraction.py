@@ -7,6 +7,7 @@ import sys
 import chatgpt
 import re
 from bs4 import BeautifulSoup
+import json
 
 
 myDb = mysql.connector.connect(
@@ -23,36 +24,36 @@ if (myDb.is_connected()):
 else:
     print("Not connected")
 
+f = open("pregenerated-hints.json")
+pregenerated_hints = json.load(f)
 
-@app.route('/', methods=['GET', 'POST'])
-@app.route('/choose_questions', methods=['GET', 'POST'])
-def choose_questions():
+@app.route('/api/extract_question', methods=['GET', 'POST'])
+def extract_question():
+    
+    id = int(request.args.get("id"))
+    if id == -1:
+        return {}
+    
+    query = f"select id, qtype, question from questions where status = 'publish' and id = {id}"
+
     try:
-        if request.method == 'POST':
-            # fetch form data
-            # query = f"select id, qtype, question from questions where status = 'publish'  and category = 'Chapter{request.form['submit_button']}' ORDER by RAND() LIMIT 1"
-            query = f"select id, qtype, question from questions where id=1081"
-
-            try:
-                cursor.execute(query)
-                res = cursor.fetchall()[0]
-            except mysql.connector.Error as error:
-                return "Failed to create due to this error: " + repr(error)
-
-            session["qid"] = res[0]
-            session["qtype"] = res[1].lower()
-            session["question"] = preprocess_text(res[2])
-            session["hint"] = ""
-
-            if session["qtype"] == "mc":
-                session["choices"] = retrieve_choices(session["qid"])
-
-            return redirect(url_for('display_questions'))
-
+        cursor.execute(query)
+        res = cursor.fetchall()[0]
     except mysql.connector.Error as error:
-        print("Failed to create due to this error: " + repr(error))
+        return "Failed to create due to this error: " + repr(error)
 
-    return render_template('choose_questions.html')
+    response = {}
+    response["qid"] = res[0]
+    response["qtype"] = res[1].lower()
+    response["question"] = preprocess_text(res[2])
+    response["hint"] = pregenerated_hints[str(id)]
+
+    if response["qtype"] == "mc":
+        response["choices"] = retrieve_choices(response["qid"])
+    
+    return response
+
+
 
 
 @app.route('/display_questions', methods=['GET', 'POST'])
@@ -79,12 +80,11 @@ def display_questions():
 def preprocess_text(question):
     # define replacements
     rep = {'<pre class="ITS_Equation">': "",
-           "</pre>": "", "<latex>": "$$", "</latex>": "$$"}
+           "</pre>": "", "<latex>": "$", "</latex>": "$"}
 
     rep = dict((re.escape(k), v) for k, v in rep.items())
     pattern = re.compile("|".join(rep.keys()))
-    question = str(BeautifulSoup(question, "lxml"))
-    return pattern.sub(lambda m: rep[re.escape(m.group(0))], question)
+    return pattern.sub(lambda m: rep[re.escape(m.group(0))], str(BeautifulSoup(question, "lxml")))
 
 
 def retrieve_choices(id):
@@ -94,7 +94,7 @@ def retrieve_choices(id):
 
     try:
         cursor.execute(query)
-        res = [str(BeautifulSoup(choice, "lxml"))
+        res = [preprocess_text(str(BeautifulSoup(choice, "lxml")))
                for choice in cursor.fetchall()[0] if choice]
     except mysql.connector.Error as error:
         print("Failed to create due to this error: " + repr(error))
