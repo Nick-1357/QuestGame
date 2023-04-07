@@ -171,7 +171,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
   useEffect(() => {
     setContext(canvasRef.current && canvasRef.current.getContext("2d"));
     clearBoard(context);
-    drawObject(context, user1, "#91C483");
+    drawObject(context, user1, "#3944BC");
 
     questionTriggerCheck();
 
