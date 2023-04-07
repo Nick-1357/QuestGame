@@ -17,7 +17,7 @@ export interface IGameBoard {
 const GameBoard = ({height, width}: IGameBoard) => {
   const canvasRef = useRef <HTMLCanvasElement | null> (null);
   const [context, setContext] = useState < CanvasRenderingContext2D | null> (null);
-  const [questAmt, setQuestAmt] = useState(3);
+  const [questAmt, setQuestAmt] = useState(7);
   const [prevRand, setPrevRand] = useState(-1);
 
   enum Diff {
@@ -143,7 +143,7 @@ const GameBoard = ({height, width}: IGameBoard) => {
     (event: KeyboardEvent) => {
       switch (event.key) {
         case "z":
-          setQuestAmt(Math.floor((Math.random() * 10) + 1));
+          setQuestAmt(Math.floor((Math.random() * 10) + 3));
           break;
         
         case "w": //"w" and "d" are along Y-axis; dy > 0 == DOWN; dy < 0 == UP

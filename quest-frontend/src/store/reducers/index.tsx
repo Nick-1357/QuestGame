@@ -37,7 +37,7 @@ const gameReducer = (state = globalState, action: any) => {
         case UPDATE_SCORE:
             return {
                 ...state,
-                score: state.score + 1,
+                score: state.score + 10,
             }
     }
 };
